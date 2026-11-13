@@ -1,0 +1,500 @@
+/* ==========================================================
+   Rap é Compromisso — estilos
+   Estética: Racionais (tipografia gótica, preto e vermelho) com
+   toques de Sabotage (pincel, colagem, xerox) na primeira dobra.
+
+   Como está organizado:
+   1. Variáveis (cores e fontes) — mexa aqui para mudar o site todo
+   2. Base e layout
+   3. Topo e botões
+   4. Hero (1ª dobra, fundo só de tipografia e textura)
+   5. Seções do site
+   6. As minas do rap (menu deslizante na horizontal)
+   7. Dashboard e formulário
+   8. Rodapé e responsivo
+   ========================================================== */
+
+/* ---------- 1. VARIÁVEIS ---------- */
+:root {
+  --bg: #090606;            /* preto */
+  --bg-card: #140c0c;
+  --linha: #4a2a2a;
+  --texto: #efe6d2;         /* branco "papel velho" */
+  --texto-suave: #cfc4ac;
+  --acento: #c2121c;        /* vermelho */
+  --acento-texto: #efe6d2;  /* cor do texto em cima do vermelho */
+  --papel: #e7dcc1;         /* papel xerox das seções claras */
+  --papel-texto: #1a0f0f;
+
+  --f-titulo: 'UnifrakturCook', 'Old English Text MT', 'Blackletter', serif; /* gótica (Racionais) */
+  --f-pincel: 'Permanent Marker', 'Impact', cursive;                         /* pincel (Sabotage) */
+  --f-numero: 'Anton', 'Impact', sans-serif;                                 /* números, para ficarem legíveis */
+  --f-texto: 'Courier Prime', 'Courier New', monospace;
+
+  /* textura de grão de xerox (SVG embutido) */
+  --grao: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- 2. BASE E LAYOUT ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: var(--f-texto);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; display: block; }
+.site { width: 100%; overflow: hidden; }
+
+.titulo {
+  font-family: var(--f-titulo);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+:focus-visible { outline: 3px solid var(--acento); outline-offset: 3px; }
+::selection { background: var(--acento); color: var(--acento-texto); }
+
+.miolo { max-width: 1200px; margin: 0 auto; padding: 96px 24px; }
+.miolo-duplo { display: flex; flex-wrap: wrap; gap: 56px; }
+.miolo-estreito { max-width: 1000px; padding-bottom: 112px; }
+.coluna { flex: 1 1 360px; min-width: 0; }
+
+.rotulo {
+  margin: 0 0 16px;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+}
+.rotulo-acento { color: var(--acento); }
+.quadradinho { display: inline-block; width: 14px; height: 14px; margin-right: 10px; background: var(--acento); }
+
+.secao-titulo { margin: 0; font-size: clamp(48px, 6.8vw, 92px); line-height: 1.02; }
+.secao-titulo-margem { margin-bottom: 48px; }
+.secao-titulo-pequena { margin-bottom: 16px; }
+
+/* Seção "papel xerox": fundo claro com textura de grão */
+.papel { position: relative; background: var(--papel); color: var(--papel-texto); }
+.papel::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--grao);
+  mix-blend-mode: multiply; opacity: .22; pointer-events: none;
+}
+.papel > * { position: relative; }
+
+/* ---------- 3. TOPO E BOTÕES ---------- */
+.topo { position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+.topo-nav {
+  max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 8px 32px;
+}
+.marca { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texto); }
+.marca-logo { width: 46px; height: 46px; object-fit: contain; }
+.marca-nome { font-size: 28px; }
+.menu { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.menu-link {
+  display: inline-flex; align-items: center;
+  min-height: 44px; padding: 0 12px;
+  color: var(--texto); text-decoration: none;
+  font-size: 14px; letter-spacing: .14em; text-transform: uppercase;
+  text-shadow: 0 1px 6px #000;
+}
+.menu-link:hover { color: var(--acento); }
+.menu-link-destaque { border: 2px solid var(--texto); padding: 0 16px; background: rgba(0,0,0,.45); }
+
+.botoes { display: flex; flex-wrap: wrap; gap: 20px; }
+.btn {
+  display: inline-flex; align-items: center;
+  min-height: 52px; padding: 0 28px;
+  font-family: inherit; font-size: 16px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+  cursor: pointer; transition: transform .12s ease;
+}
+.btn:hover { transform: translate(-3px, -3px); }
+.btn-cheio { background: var(--acento); color: var(--acento-texto); border: 3px solid var(--acento); box-shadow: 5px 5px 0 var(--texto); }
+.btn-vazado { background: rgba(0,0,0,.35); color: var(--texto); border: 3px solid var(--texto); }
+.btn-enviar { background: var(--acento); color: var(--acento-texto); border: 3px solid #111; box-shadow: 5px 5px 0 #111; }
+
+/* ---------- 4. HERO ---------- */
+.hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  overflow: hidden; background: #060404;
+}
+.hero-fundo { position: absolute; inset: 0; }
+
+/* Letreiro gótico gigante, em vermelho escuro, atrás de tudo */
+.fundo-gotico {
+  position: absolute; right: -4vw; top: 70px;
+  font-family: var(--f-titulo);
+  font-size: clamp(150px, 27vw, 430px); line-height: .85;
+  color: #8d0d15; opacity: .7;
+  white-space: nowrap;
+  transform: rotate(-4deg);
+}
+/* Letreiro de pincel inclinado, vermelho vivo (referência do Sabotage) */
+.fundo-pincel {
+  position: absolute; right: -2vw; bottom: 70px;
+  font-family: var(--f-pincel);
+  font-size: clamp(90px, 17vw, 270px); line-height: 1;
+  color: var(--acento); opacity: .9;
+  white-space: nowrap;
+  transform: rotate(-8deg) skewX(-8deg);
+}
+/* Pontilhado de xerox que some para a esquerda */
+.fundo-pontos {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(194,18,28,.65) 2px, transparent 2.6px);
+  background-size: 13px 13px;
+  -webkit-mask-image: linear-gradient(270deg, #000 0%, transparent 62%);
+          mask-image: linear-gradient(270deg, #000 0%, transparent 62%);
+}
+/* Faixa de papel colada na base da seção */
+.fundo-faixa {
+  position: absolute; left: -2%; right: -2%; bottom: 0;
+  padding: 8px 0;
+  background: var(--papel); color: #111;
+  font-family: var(--f-numero); font-size: 18px; letter-spacing: .14em; text-transform: uppercase;
+  white-space: nowrap; overflow: hidden;
+  transform: rotate(-.6deg);
+}
+/* Etiqueta com código de barras (colagem) */
+.fundo-ficha {
+  position: absolute; right: 8vw; top: 46%;
+  width: 240px; padding: 12px 14px 10px;
+  background: var(--papel); color: #111;
+  box-shadow: 7px 7px 0 #000;
+  transform: rotate(5deg);
+  display: block;
+}
+.fundo-ficha-titulo { display: block; font-family: var(--f-numero); font-weight: 400; font-size: 22px; letter-spacing: .04em; text-transform: uppercase; line-height: 1.1; }
+.fundo-codigo {
+  display: block; height: 52px; margin: 8px 0 6px;
+  background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 5px, transparent 5px 8px, #111 8px 11px, transparent 11px 13px, #111 13px 14px, transparent 14px 17px);
+}
+.fundo-ficha-nota { display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+
+/* Escurece a esquerda para o título ficar legível */
+.hero-cobertura {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(6,4,4,.95) 0%, rgba(6,4,4,.78) 45%, rgba(6,4,4,.2) 100%);
+}
+.hero-grao {
+  position: absolute; inset: 0;
+  background-image: var(--grao);
+  mix-blend-mode: overlay; opacity: .5; pointer-events: none;
+}
+
+.hero-conteudo {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1200px; margin: 0 auto;
+  padding: 130px 24px 120px;
+}
+.etiqueta {
+  display: inline-block; margin: 0 0 22px; padding: 6px 14px;
+  background: var(--papel); color: var(--papel-texto);
+  font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  transform: rotate(-1.5deg);
+  clip-path: polygon(0 8%, 4% 0, 12% 6%, 22% 0, 35% 7%, 50% 0, 64% 6%, 80% 0, 92% 7%, 100% 0, 100% 92%, 94% 100%, 80% 93%, 66% 100%, 50% 94%, 36% 100%, 20% 93%, 8% 100%, 0 92%);
+}
+.hero-logo { width: clamp(150px, 20vw, 250px); margin: 0 0 14px; filter: drop-shadow(4px 4px 0 var(--acento)); }
+.hero-titulo {
+  margin: 0 0 26px; max-width: 900px;
+  font-size: clamp(50px, 7.6vw, 112px); line-height: 1;
+  text-shadow: 3px 3px 0 rgba(0,0,0,.6);
+}
+.marca-texto {
+  font-family: var(--f-titulo);
+  display: inline-block;
+  background: var(--acento); color: var(--acento-texto);
+  padding: 0 .14em; transform: rotate(-2deg); text-shadow: none;
+}
+.hero-texto { margin: 0 0 34px; max-width: 560px; font-size: 19px; color: var(--texto); text-shadow: 0 1px 8px #000; }
+.hero-carimbo {
+  position: absolute; right: -40px; bottom: 54px; z-index: 2;
+  margin: 0; padding: 8px 40px;
+  background: var(--acento); color: var(--acento-texto);
+  font-family: var(--f-titulo); font-size: 24px;
+  transform: rotate(-6deg); white-space: nowrap;
+}
+
+/* ---------- Faixa rolante ---------- */
+.faixa { padding: 28px 0; overflow: hidden; background: var(--bg); }
+.faixa-texto {
+  background: var(--acento); color: var(--acento-texto);
+  padding: 10px 0; font-size: 32px;
+  white-space: nowrap; overflow: hidden;
+  transform: rotate(-1.2deg) scale(1.03);
+}
+
+/* ---------- 5. SEÇÕES ---------- */
+.texto-grande { margin: 0 0 20px; font-size: 20px; }
+.selo {
+  display: inline-block; margin: 12px 0 0; padding: 16px 20px;
+  border: 3px solid var(--papel-texto);
+  font-size: 15px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  transform: rotate(-1deg);
+}
+
+.passos { display: flex; flex-wrap: wrap; gap: 32px; }
+.passo {
+  flex: 1 1 280px; min-width: 0; padding: 28px;
+  background: var(--bg-card); border: 2px solid var(--texto); box-shadow: 8px 8px 0 var(--acento);
+}
+.passo-numero { margin: 0 0 8px; font-family: var(--f-numero); font-size: 96px; line-height: 1; color: var(--acento); }
+.passo-titulo { margin: 0 0 12px; font-size: 40px; line-height: 1.05; font-weight: 400; }
+.passo-texto { margin: 0; color: var(--texto-suave); }
+
+.bloco-acento { background: var(--acento); color: var(--acento-texto); position: relative; }
+.bloco-acento::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--grao); mix-blend-mode: multiply; opacity: .3; pointer-events: none;
+}
+.bloco-acento .miolo { position: relative; padding: 88px 24px; }
+.areas-titulo { margin: 0 0 40px; font-size: clamp(44px, 6vw, 80px); line-height: 1.05; }
+.areas { display: flex; flex-wrap: wrap; gap: 14px; margin: 0 0 28px; padding: 0; list-style: none; }
+.area { padding: 6px 22px 8px; font-size: 32px; border: 3px solid var(--bg); line-height: 1.2; }
+.area-cheia { background: var(--bg); color: var(--texto); }
+.areas-nota { margin: 0; max-width: 620px; font-size: 16px; font-weight: 700; }
+
+/* ---------- 6. AS MINAS DO RAP (menu deslizante na horizontal) ---------- */
+.minas {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(194,18,28,.28) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(194,18,28,.2) 0%, transparent 50%),
+    #060404;
+  overflow: hidden;
+}
+.minas::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--grao); mix-blend-mode: overlay; opacity: .4; pointer-events: none;
+}
+.miolo-minas { position: relative; padding-bottom: 24px; }
+.minas-titulo {
+  margin: 0 0 16px;
+  font-size: clamp(60px, 10vw, 140px); line-height: 1;
+  text-shadow: 5px 5px 0 var(--acento);
+}
+.minas-intro { margin: 0 0 32px; max-width: 620px; font-size: 19px; color: var(--texto-suave); }
+
+.minas-controles { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.minas-dica { margin: 0; font-size: 14px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--acento); }
+.minas-setas { display: flex; gap: 12px; }
+.seta {
+  width: 56px; height: 56px;
+  background: transparent; color: var(--texto);
+  border: 3px solid var(--texto);
+  font-family: inherit; font-size: 26px; font-weight: 700; line-height: 1;
+  cursor: pointer; transition: transform .12s ease, background .12s ease;
+}
+.seta:hover { background: var(--acento); border-color: var(--acento); transform: translate(-2px, -2px); }
+
+/* O trilho é um flex que rola na horizontal. scroll-snap faz cada card "encaixar". */
+.minas-trilho {
+  position: relative;
+  display: flex; gap: 28px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 28px max(24px, calc((100vw - 1200px) / 2 + 24px)) 64px;
+  scroll-padding-left: max(24px, calc((100vw - 1200px) / 2 + 24px));
+  scrollbar-width: thin;
+  scrollbar-color: var(--acento) #1a0c0c;
+}
+.minas-trilho::after { content: ""; flex: 0 0 1px; }
+.minas-trilho::-webkit-scrollbar { height: 10px; }
+.minas-trilho::-webkit-scrollbar-track { background: #1a0c0c; }
+.minas-trilho::-webkit-scrollbar-thumb { background: var(--acento); }
+
+.mina {
+  flex: 0 0 min(320px, 78vw);
+  scroll-snap-align: start;
+  background: var(--bg-card);
+  border: 3px solid var(--acento);
+  box-shadow: 8px 8px 0 #000;
+  transition: transform .15s ease;
+}
+.mina:hover { transform: translateY(-6px); }
+.mina-foto { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: #000; }
+.mina-foto img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.15);
+  transition: filter .25s ease, transform .35s ease;
+}
+.mina:hover .mina-foto img { filter: grayscale(0) contrast(1.05); transform: scale(1.04); }
+.mina-numero {
+  position: absolute; left: 0; top: 0;
+  padding: 4px 14px;
+  background: var(--acento); color: var(--acento-texto);
+  font-family: var(--f-numero); font-size: 24px; line-height: 1.3;
+}
+.mina-info { padding: 18px 18px 22px; }
+.mina-nome { margin: 0 0 6px; font-size: 42px; line-height: 1; }
+.mina-texto { margin: 0 0 16px; font-size: 15px; color: var(--texto-suave); }
+.mina-spotify {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 44px; padding: 0 18px;
+  background: var(--acento); color: var(--acento-texto);
+  border: 2px solid var(--texto);
+  font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 #000;
+  transition: transform .12s ease;
+}
+.mina-spotify::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--texto); }
+.mina-spotify:hover { transform: translate(-2px, -2px); }
+
+/* ---------- 7. DASHBOARD (removido) ---------- */
+/* Regras de estilo do dashboard foram removidas — o projeto agora expõe apenas o sistema
+   de login/cadastro e as páginas públicas. Se precisar restaurar trechos do dashboard,
+   posso reintroduzir seletivamente. */
+
+/* ---------- Formulário ---------- */
+.formulario { padding: 36px; background: #f4ecd9; color: #111; border: 3px solid #111; box-shadow: 10px 10px 0 var(--acento); }
+.campos { display: flex; flex-wrap: wrap; gap: 24px; }
+.campo { flex: 1 1 260px; min-width: 0; }
+.campo-inteiro { flex: 1 1 100%; }
+.campo-rotulo { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.campo-entrada {
+  display: block; width: 100%; min-height: 48px; padding: 10px 14px;
+  background: #fff; color: #111; border: 3px solid #111;
+  font-family: inherit; font-size: 17px;
+}
+textarea.campo-entrada { resize: vertical; }
+.formulario-rodape { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; margin-top: 32px; }
+.formulario-nota { margin: 0; flex: 1 1 280px; font-size: 14px; color: #3a3a3a; }
+
+/* ---------- 8. RODAPÉ ---------- */
+.rodape { border-top: 2px solid var(--linha); }
+.rodape-miolo {
+  max-width: 1200px; margin: 0 auto; padding: 56px 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px;
+}
+.rodape-esq { flex: 1 1 320px; min-width: 0; }
+.rodape-marca { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+.rodape-texto { margin: 0; font-size: 15px; color: var(--texto-suave); }
+.rodape-nota { margin: 8px 0 0; font-size: 14px; color: #b8b8b8; }
+.tecnologias { flex: 1 1 320px; min-width: 0; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.tec { padding: 6px 14px; border: 2px solid #5a5a5a; font-size: 14px; }
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width: 960px) {
+  .fundo-ficha { display: none; }
+  .fundo-gotico { top: 90px; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .miolo { padding: 72px 20px; }
+  .hero-conteudo { padding: 215px 20px 110px; }
+  .topo-nav { flex-direction: column; align-items: flex-start; padding: 12px 20px; }
+  .marca-nome { font-size: 22px; }
+  .marca-logo { width: 36px; height: 36px; }
+  .menu { gap: 0 2px; margin-left: -8px; }
+  .menu-link { min-height: 38px; padding: 0 8px; font-size: 12px; }
+  .menu-link-destaque { padding: 0 10px; }
+  .hero-carimbo { font-size: 18px; bottom: 44px; }
+  .fundo-pincel { bottom: 90px; }
+  .minas-dica { font-size: 12px; letter-spacing: .12em; }
+  .seta { width: 48px; height: 48px; }
+  .formulario { padding: 22px; }
+  .barra-nome { flex-basis: 96px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faixa-texto { animation: respirar 6s ease-in-out infinite alternate; }
+  @keyframes respirar { from { transform: rotate(-1.2deg) scale(1.03); } to { transform: rotate(-.6deg) scale(1.03); } }
+}
+
+/* ==========================================================
+   TELAS DE LOGIN E CADASTRO (login.html e cadastro.html)
+   Reaproveitam as classes do site: .marca, .menu, .campo, .campo-entrada, .btn...
+   ========================================================== */
+
+/* topo "normal" (nas outras páginas ele fica por cima da imagem) */
+.topo-solido { position: relative; background: #060404; border-bottom: 2px solid var(--linha); }
+
+.auth {
+  position: relative;
+  min-height: calc(100vh - 190px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 64px 24px 96px;
+  background: #060404;
+}
+/* pontilhado de xerox que some para a esquerda + grão (mesma linguagem da primeira dobra) */
+.auth::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(194,18,28,.6) 2px, transparent 2.6px);
+  background-size: 13px 13px;
+  -webkit-mask-image: linear-gradient(270deg, #000 0%, transparent 65%);
+          mask-image: linear-gradient(270deg, #000 0%, transparent 65%);
+  pointer-events: none;
+}
+.auth::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--grao);
+  mix-blend-mode: overlay; opacity: .45; pointer-events: none;
+}
+
+/* cartão de papel xerox com sombra vermelha */
+.auth-card {
+  position: relative; z-index: 1;
+  width: min(520px, 100%);
+  padding: 36px;
+  background: #f4ecd9; color: #111;
+  border: 3px solid #111;
+  box-shadow: 10px 10px 0 var(--acento);
+}
+.auth-card .rotulo-acento { color: #a30d16; }
+.auth-titulo { margin: 0 0 28px; font-size: clamp(46px, 8vw, 68px); line-height: 1; }
+.auth-card .campos { flex-direction: column; flex-wrap: nowrap; gap: 20px; }
+.auth-card .campo { flex: 0 0 auto; }
+.auth-acoes { margin-top: 28px; }
+.auth-troca { margin: 24px 0 0; font-size: 15px; }
+.auth-troca a { color: #a30d16; font-weight: 700; }
+
+/* dica embaixo do campo (aparece enquanto digita) */
+.dica { display: block; margin-top: 6px; font-size: 13px; font-weight: 700; }
+.dica:empty { display: none; } /* sem texto = sem espaço, para os campos ficarem alinhados */
+.dica-erro { color: #a30d16; }
+.dica-ok { color: #111; }
+
+/* aviso no topo da tela (erros de preenchimento e sucesso) */
+.auth-alerta {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 60;
+  display: none;
+  max-width: min(520px, calc(100% - 32px));
+  padding: 14px 20px;
+  background: var(--acento); color: var(--acento-texto);
+  border: 3px solid var(--texto); box-shadow: 6px 6px 0 #000;
+  font-weight: 700;
+}
+
+/* bolinha de carregando */
+.carregando { display: none; align-items: center; gap: 12px; margin-top: 20px; font-weight: 700; }
+.spinner {
+  width: 22px; height: 22px;
+  border: 4px solid #111; border-top-color: var(--acento);
+  border-radius: 50%;
+  animation: girar .8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* erro que vem do servidor */
+.erros-login {
+  display: none; margin-top: 16px; padding: 12px 14px;
+  background: #fff; color: #a30d16;
+  border: 3px solid var(--acento);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .auth { padding: 40px 16px 72px; }
+  .auth-card { padding: 24px; box-shadow: 7px 7px 0 var(--acento); }
+}

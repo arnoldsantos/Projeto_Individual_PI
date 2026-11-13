@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rap é Compromisso | Cadastro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Permanent+Marker&amp;family=UnifrakturCook:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+
+<!-- funções compartilhadas: aviso, carregando, validar e-mail, sessão -->
+<script src="js/sessao.js"></script>
+</head>
+
+<body>
+<div class="site">
+
+<header class="topo topo-solido">
+  <nav aria-label="Principal" class="topo-nav">
+    <a aria-label="Rap é Compromisso, início" class="marca" href="index.html">
+      <img alt="" class="marca-logo" src="img/logo-branca.png"/>
+      <span class="titulo marca-nome">Rap é Compromisso</span>
+    </a>
+    <div class="menu">
+      <a class="menu-link" href="index.html">Início</a>
+      <a class="menu-link" href="login.html">Entrar</a>
+      <a aria-current="page" class="menu-link menu-link-destaque" href="cadastro.html">Cadastro</a>
+    </div>
+  </nav>
+</header>
+
+<main class="auth">
+  <!-- Aviso que aparece no topo (erros de preenchimento e sucesso) -->
+  <div class="auth-alerta" id="cardErro" role="alert">
+    <span id="mensagem_erro"></span>
+  </div>
+
+  <div class="auth-card">
+    <p class="rotulo rotulo-acento">Participar da pesquisa</p>
+    <h1 class="titulo auth-titulo">Bem-vindo!</h1>
+
+    <!-- Cada campo tem um <small class="dica"> embaixo: o onkeyup preenche ele enquanto a pessoa digita -->
+    <div class="campos">
+      <div class="campo">
+        <label class="campo-rotulo" for="nome_input">Nome</label>
+        <input autocomplete="name" class="campo-entrada" id="nome_input" placeholder="Seu nome" type="text"/>
+      </div>
+      <div class="campo">
+        <label class="campo-rotulo" for="email_input">E-mail</label>
+        <input autocomplete="email" class="campo-entrada" id="email_input" onkeyup="dicaEmail()" placeholder="voce@email.com" type="email"/>
+        <small class="dica" id="dica_email"></small>
+      </div>
+
+      <div class="campo">
+        <label class="campo-rotulo" for="senha_input">Senha</label>
+        <input autocomplete="new-password" class="campo-entrada" id="senha_input" onkeyup="dicaSenha()" placeholder="Mínimo de 8 caracteres" type="password"/>
+        <small class="dica" id="dica_senha"></small>
+      </div>
+      <div class="campo">
+        <label class="campo-rotulo" for="confirmacao_senha_input">Confirmação da senha</label>
+        <input autocomplete="new-password" class="campo-entrada" id="confirmacao_senha_input" onkeyup="dicaConfirmacao()" placeholder="Repita a senha" type="password"/>
+        <small class="dica" id="dica_confirmacao"></small>
+      </div>
+    </div>
+
+    <div class="auth-acoes">
+      <button class="btn btn-enviar" onclick="cadastrar()" type="button">Cadastrar</button>
+    </div>
+
+    <!-- bolinha de carregando (escondida até chamar aguardar()) -->
+    <div class="carregando" id="div_aguardar">
+      <span aria-hidden="true" class="spinner"></span>
+      <span>Cadastrando...</span>
+    </div>
+
+    <!-- erros que vêm do servidor (ex.: e-mail já cadastrado) -->
+    <div class="erros-login" id="div_erros_login" role="alert"></div>
+
+    <p class="auth-troca">Já tem conta? <a href="login.html">Entrar</a></p>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-miolo">
+    <div class="rodape-esq">
+      <p class="rodape-texto">Projeto individual de Arnold Silva · Ciência da Computação · SPTech</p>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  // ---------- Dicas enquanto digita (onkeyup) ----------
+
+  function dicaEmail() {
+    var email = email_input.value.trim();
+
+    if (email == "") {
+      dica_email.textContent = "";
+    } else if (emailValido(email)) {
+      dica_email.className = "dica dica-ok";
+      dica_email.textContent = "✓ E-mail com formato válido";
+    } else {
+      dica_email.className = "dica dica-erro";
+      dica_email.textContent = "Formato inválido (exemplo: nome@email.com)";
+    }
+  }
+
+  function dicaSenha() {
+    var tamanho = senha_input.value.length;
+
+    if (tamanho == 0) {
+      dica_senha.textContent = "";
+    } else if (tamanho < 8) {
+      dica_senha.className = "dica dica-erro";
+      dica_senha.textContent = "Faltam " + (8 - tamanho) + " caractere(s)";
+    } else {
+      dica_senha.className = "dica dica-ok";
+      dica_senha.textContent = "✓ Tamanho ok";
+    }
+
+    // se a confirmação já foi digitada, confere de novo (a senha mudou)
+    if (confirmacao_senha_input.value != "") {
+      dicaConfirmacao();
+    }
+  }
+
+  function dicaConfirmacao() {
+    if (confirmacao_senha_input.value == "") {
+      dica_confirmacao.textContent = "";
+    } else if (confirmacao_senha_input.value == senha_input.value) {
+      dica_confirmacao.className = "dica dica-ok";
+      dica_confirmacao.textContent = "✓ As senhas são iguais";
+    } else {
+      dica_confirmacao.className = "dica dica-erro";
+      dica_confirmacao.textContent = "As senhas não conferem";
+    }
+  }
+
+  // ---------- Botão Cadastrar ----------
+
+  function cadastrar() {
+    var nomeVar = nome_input.value.trim();
+    var emailVar = email_input.value.trim();
+  
+ 
+    var senhaVar = senha_input.value;
+    var confirmacaoVar = confirmacao_senha_input.value;
+
+    // 1) campos em branco
+    if (nomeVar == "" || emailVar == "" || senhaVar == "" || confirmacaoVar == "") {
+      mostrarAviso("Preencha todos os campos.");
+      return false;
+    }
+
+    // 2) nome com pelo menos 2 letras
+    if (nomeVar.length < 2) {
+      mostrarAviso("O nome precisa ter pelo menos 2 letras.");
+      return false;
+    }
+
+    // 3) formato do e-mail
+    if (!emailValido(emailVar)) {
+      mostrarAviso("Digite um e-mail válido (exemplo: nome@email.com).");
+      return false;
+    }
+
+
+
+    // 5) senha com pelo menos 8 caracteres
+    if (senhaVar.length < 8) {
+      mostrarAviso("A senha precisa ter pelo menos 8 caracteres.");
+      return false;
+    }
+
+    // 6) as duas senhas iguais
+    if (senhaVar != confirmacaoVar) {
+      mostrarAviso("As senhas não conferem.");
+      return false;
+    }
+
+    // passou em tudo: mostra o "carregando" e chama a API
+    aguardar();
+
+    fetch("/usuarios/cadastrar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      // os nomes terminados em "Server" são os mesmos que o controller lê em req.body
+      body: JSON.stringify({
+        nomeServer: nomeVar,
+        emailServer: emailVar,
+       
+        senhaServer: senhaVar
+      })
+    }).then(function (resposta) {
+
+      if (resposta.ok) {
+        finalizarAguardar();
+        mostrarAviso("Cadastro realizado com sucesso! Indo para o login...");
+
+        setTimeout(function () {
+          window.location = "login.html";
+        }, 2000);
+      } else {
+        // erro do servidor (ex.: 409 "Este e-mail já está cadastrado!")
+        resposta.text().then(function (texto) {
+          finalizarAguardar(texto);
+        });
+      }
+
+    }).catch(function (erro) {
+      console.log(erro);
+      finalizarAguardar("Não foi possível falar com o servidor. Confira se a API está rodando.");
+    });
+
+    return false;
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rap é Compromisso | Entrar</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Permanent+Marker&amp;family=UnifrakturCook:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+
+<!-- funções compartilhadas: aviso, carregando, validar e-mail, sessão -->
+<script src="js/sessao.js"></script>
+</head>
+
+<body>
+<div class="site">
+
+<header class="topo topo-solido">
+  <nav aria-label="Principal" class="topo-nav">
+    <a aria-label="Rap é Compromisso, início" class="marca" href="index.html">
+      <img alt="" class="marca-logo" src="img/logo-branca.png"/>
+      <span class="titulo marca-nome">Rap é Compromisso</span>
+    </a>
+    <div class="menu">
+      <a class="menu-link" href="index.html">Início</a>
+      <a aria-current="page" class="menu-link menu-link-destaque" href="login.html">Entrar</a>
+      <a class="menu-link" href="cadastro.html">Cadastro</a>
+    </div>
+  </nav>
+</header>
+
+<main class="auth">
+  <!-- Aviso que aparece no topo (erros de preenchimento) -->
+  <div class="auth-alerta" id="cardErro" role="alert">
+    <span id="mensagem_erro"></span>
+  </div>
+
+  <div class="auth-card">
+    <p class="rotulo rotulo-acento">Acesso</p>
+    <h1 class="titulo auth-titulo">Olá de volta!</h1>
+
+    <div class="campos">
+      <div class="campo">
+        <label class="campo-rotulo" for="email_input">E-mail</label>
+        <input autocomplete="email" class="campo-entrada" id="email_input" placeholder="voce@email.com" type="email"/>
+      </div>
+      <div class="campo">
+        <label class="campo-rotulo" for="senha_input">Senha</label>
+        <!-- onkeyup: roda a função toda vez que solta uma tecla. Se foi o Enter, tenta entrar. -->
+        <input autocomplete="current-password" class="campo-entrada" id="senha_input" onkeyup="if (event.key == 'Enter') { entrar(); }" placeholder="Sua senha" type="password"/>
+      </div>
+    </div>
+
+    <div class="auth-acoes">
+      <button class="btn btn-enviar" onclick="entrar()" type="button">Entrar</button>
+    </div>
+
+    <!-- bolinha de carregando (escondida até chamar aguardar()) -->
+    <div class="carregando" id="div_aguardar">
+      <span aria-hidden="true" class="spinner"></span>
+      <span>Entrando...</span>
+    </div>
+
+    <!-- erros que vêm do servidor (ex.: senha errada) -->
+    <div class="erros-login" id="div_erros_login" role="alert"></div>
+
+    <p class="auth-troca">Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+  </div>
+</main>
+
+<footer class="rodape">
+  <div class="rodape-miolo">
+    <div class="rodape-esq">
+      <p class="rodape-texto">Projeto individual de Arnold Silva · Ciência da Computação · SPTech</p>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  function entrar() {
+    // trim() tira espaços do começo e do fim
+    var emailVar = email_input.value.trim();
+    var senhaVar = senha_input.value;
+
+    // 1) campos em branco
+    if (emailVar == "" || senhaVar == "") {
+      mostrarAviso("Preencha o e-mail e a senha.");
+      return false;
+    }
+
+    // 2) formato do e-mail
+    if (!emailValido(emailVar)) {
+      mostrarAviso("Digite um e-mail válido (exemplo: nome@email.com).");
+      return false;
+    }
+
+    // passou nas validações: mostra o "carregando" e chama a API
+    aguardar();
+
+    fetch("/usuarios/autenticar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      // os nomes emailServer e senhaServer são os mesmos que o controller lê em req.body
+      body: JSON.stringify({
+        emailServer: emailVar,
+        senhaServer: senhaVar
+      })
+    }).then(function (resposta) {
+
+      if (resposta.ok) {
+        // login certo: o servidor devolve { id, nome, email }
+        resposta.json().then(function (json) {
+          sessionStorage.ID_USUARIO = json.id;
+          sessionStorage.NOME_USUARIO = json.nome;
+          sessionStorage.EMAIL_USUARIO = json.email;
+
+          // espera um pouquinho só para dar tempo de ver o "carregando"
+          setTimeout(function () {
+            window.location = "index.html#participar";
+          }, 800);
+        });
+      } else {
+        // login errado: o servidor devolve um texto explicando
+        resposta.text().then(function (texto) {
+          finalizarAguardar(texto);
+        });
+      }
+
+    }).catch(function (erro) {
+      // caiu aqui = nem chegou no servidor (API desligada, sem rede...)
+      console.log(erro);
+      finalizarAguardar("Não foi possível falar com o servidor. Confira se a API está rodando.");
+    });
+
+    return false;
+  }
+</script>
+
+</body>
+</html>
