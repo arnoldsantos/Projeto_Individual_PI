@@ -1,81 +1,367 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rap é Compromisso</title>
 
-    <title>AquaTech | Página Inicial</title>
+<!-- Fontes: Anton (títulos), Courier Prime (texto), Permanent Marker (pincel, referência Sabotage), UnifrakturCook (gótica, referência Racionais) -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;family=Permanent+Marker&amp;family=UnifrakturCook:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
 
-    <script src="./js/sessao.js"></script>
-
-    <link rel="stylesheet" href="./css/estilo.css">
-    <link rel="icon" href="./assets/icon/favicon2.ico">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+<!-- funções compartilhadas (sessão, menu Entrar/Sair) -->
+<script src="js/sessao.js"></script>
 </head>
 
-<body>
-    <div class="header">
-      <div class="container">
-        <h1 class="titulo">AquaTech</h1>
-        <ul class="navbar">
-          <li class="agora">
-            <a href="#">Inicial</a>
-          </li>
-          <li>
-            <a href="simulador.html">Simulador</a>
-          </li>
-          <li>|</li>
-          <li>
-            <a href="login.html">Login</a>
-          </li>
-          <li>
-            <a href="cadastro.html">Cadastro</a>
-          </li>
+<body onload="atualizarMenuUsuario()">
+
+<div class="site">
+
+<header class="topo">
+  <nav aria-label="Principal" class="topo-nav">
+    <a aria-label="Rap é Compromisso, início" class="marca" href="#inicio">
+      <img alt="" class="marca-logo" src="img/logo-branca.png"/>
+      <span class="titulo marca-nome">Rap é Compromisso</span>
+    </a>
+    <div class="menu">
+      <a class="menu-link" href="#sobre">Sobre</a>
+      <a class="menu-link" href="#minas">As minas</a>
+      <a class="menu-link" href="#como-funciona">Como funciona</a>
+      <a class="menu-link" href="#dados">Dados</a>
+      <!-- Se estiver logado, o botão vira "Sair · Nome" (função em js/sessao.js) -->
+      <a class="menu-link menu-link-destaque" href="login.html" id="menu_entrar" onclick="return cliqueEntrar()">Entrar</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ 1ª DOBRA: imagem cobrindo o fundo ============ -->
+<section class="hero" id="inicio">
+  <div aria-hidden="true" class="hero-fundo">
+    <span class="fundo-gotico">Racionais</span>
+    <span class="fundo-pincel">Sabotage</span>
+    <span class="fundo-pontos"></span>
+    <span class="fundo-faixa">Rap é compromisso /// Rap é compromisso /// Rap é compromisso /// Rap é compromisso /// Rap é compromisso</span>
+    <span class="fundo-ficha">
+      <b class="fundo-ficha-titulo">Rap é compromisso</b>
+      <i class="fundo-codigo"></i>
+      <small class="fundo-ficha-nota">Pesquisa · SPTech · 2026</small>
+    </span>
+  </div>
+  <div aria-hidden="true" class="hero-cobertura"></div>
+  <div aria-hidden="true" class="hero-grao"></div>
+
+  <div class="hero-conteudo">
+    <p class="etiqueta">Pesquisa · Projeto individual · SPTech</p>
+    <img alt="Rap é compromisso, não é viagem" class="hero-logo" src="img/logo-branca.png"/>
+    <h1 class="titulo hero-titulo">Como o rap <span class="marca-texto">impacta</span> a vida das pessoas</h1>
+    <p class="hero-texto">Para muita gente, o rap é mais que trilha sonora: é escola, espelho e voz. Esta pesquisa pergunta como ele mudou a vida de quem ouve e transforma as respostas em dados.</p>
+    <div class="botoes">
+      <a class="btn btn-cheio" href="cadastro.html">Participar da pesquisa</a>
+      <a class="btn btn-vazado" href="#dados">Ver os dados</a>
+    </div>
+  </div>
+
+  <p aria-hidden="true" class="hero-carimbo">Rap é compromisso, não é viagem</p>
+</section>
+
+<div class="faixa">
+  <div class="titulo faixa-texto">Ouça /// Pense /// Responda /// Compartilhe /// Ouça /// Pense /// Responda /// Compartilhe /// Ouça /// Pense /// Responda /// Compartilhe</div>
+</div>
+
+<!-- ============ SOBRE ============ -->
+<section class="papel" id="sobre">
+  <div class="miolo miolo-duplo">
+    <div class="coluna">
+      <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>01 — O projeto</p>
+      <h2 class="titulo secao-titulo">Não é só música.</h2>
+    </div>
+    <div class="coluna">
+      <p class="texto-grande">A premissa deste projeto é simples: o rap molda como as pessoas pensam, estudam, se expressam e se enxergam. Aqui, essa ideia vira pergunta, formulário e dado.</p>
+      <p class="texto-grande">Cada resposta é uma história. Juntas, elas formam um retrato de como o rap impacta a vida de quem ouve.</p>
+      <p class="selo">Projeto individual de Arnold Silva · 1º semestre de Ciência da Computação · SPTech</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AS MINAS DO RAP (menu deslizante na horizontal) ============ -->
+<section class="minas" id="minas">
+  <div class="miolo miolo-minas">
+    <p class="rotulo rotulo-acento">02 — Elas também fazem história</p>
+    <h2 class="titulo minas-titulo">As minas do rap</h2>
+    <p class="minas-intro">O rap nacional tem voz feminina forte, e a pesquisa não existe sem elas. Ouça, conheça e cite nas respostas.</p>
+    <div class="minas-controles">
+      <p class="minas-dica">Deslize para o lado →</p>
+      <div class="minas-setas">
+        <button aria-label="Anterior" class="seta" onclick="rolarMinas(-1)" type="button">←</button>
+        <button aria-label="Próxima" class="seta" onclick="rolarMinas(1)" type="button">→</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- O trilho rola na horizontal (overflow-x + scroll-snap). Para trocar o texto de cada uma,
+       edite só o <p class="mina-texto">. O botão abre a busca do artista no Spotify. -->
+  <div aria-label="Minas do rap, deslize para ver todas" class="minas-trilho" id="minas-trilho" tabindex="0">
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Duquesa" loading="lazy" src="img/duquesa.jpg"/>
+        <span class="mina-numero titulo">01</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Duquesa</h3>
+        <p class="mina-texto">Voz do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Duquesa" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Ebony" loading="lazy" src="img/ebony.jpg"/>
+        <span class="mina-numero titulo">02</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Ebony</h3>
+        <p class="mina-texto">Voz do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Ebony" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Slipmami" loading="lazy" src="img/slipmami.jpg"/>
+        <span class="mina-numero titulo">03</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Slipmami</h3>
+        <p class="mina-texto">Voz do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Slipmami" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Tasha e Tracie" loading="lazy" src="img/tasha-e-tracie.jpg"/>
+        <span class="mina-numero titulo">04</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Tasha &amp; Tracie</h3>
+        <p class="mina-texto">Dupla do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Tasha%20e%20Tracie" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Julia Costa" loading="lazy" src="img/julia-costa.jpg"/>
+        <span class="mina-numero titulo">05</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Julia Costa</h3>
+        <p class="mina-texto">Voz do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Julia%20Costa" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+
+    <article class="mina">
+      <div class="mina-foto">
+        <img alt="Foto de Nanda Tsunami" loading="lazy" src="img/nanda-tsunami.jpg"/>
+        <span class="mina-numero titulo">06</span>
+      </div>
+      <div class="mina-info">
+        <h3 class="titulo mina-nome">Nanda Tsunami</h3>
+        <p class="mina-texto">Voz do rap nacional.</p>
+        <a class="mina-spotify" href="https://open.spotify.com/search/Nanda%20Tsunami" rel="noopener" target="_blank">Ouvir no Spotify</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section id="como-funciona">
+  <div class="miolo">
+    <p class="rotulo rotulo-acento">03 — A pesquisa</p>
+    <h2 class="titulo secao-titulo secao-titulo-margem">Como funciona</h2>
+    <div class="passos">
+      <article class="passo">
+        <p class="titulo passo-numero">01</p>
+        <h3 class="titulo passo-titulo">Cadastre-se</h3>
+        <p class="passo-texto">Crie seu acesso com nome, e-mail e senha. O formulário valida tudo antes de enviar.</p>
+      </article>
+      <article class="passo">
+        <p class="titulo passo-numero">02</p>
+        <h3 class="titulo passo-titulo">Conte seu impacto</h3>
+        <p class="passo-texto">Escolha a área da vida que o rap mudou, o artista que mais te marcou, dê uma nota de 1 a 5 e deixe um depoimento curto.</p>
+      </article>
+      <article class="passo">
+        <p class="titulo passo-numero">03</p>
+        <h3 class="titulo passo-titulo">Veja os dados</h3>
+        <p class="passo-texto">Acompanhe o dashboard com as áreas mais impactadas, os artistas mais citados e a média geral de impacto.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÁREAS DE IMPACTO ============ -->
+<section class="bloco-acento">
+  <div class="miolo">
+    <p class="rotulo">Áreas de impacto</p>
+    <h2 class="titulo areas-titulo">Onde o rap mexe na vida</h2>
+    <ul class="areas">
+      <li class="titulo area area-cheia">Senso crítico</li>
+      <li class="titulo area">Autoestima</li>
+      <li class="titulo area area-cheia">Estudos</li>
+      <li class="titulo area">Motivação</li>
+      <li class="titulo area area-cheia">Amizades</li>
+      <li class="titulo area">Visão de mundo</li>
+      <li class="titulo area area-cheia">Escrita e linguagem</li>
+      <li class="titulo area">Identidade</li>
+    </ul>
+    
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section id="dados">
+  <div class="miolo">
+    <p class="rotulo rotulo-acento">04 — O dashboard</p>
+    <h2 class="titulo secao-titulo secao-titulo-pequena">Os dados</h2>
+    <p class="dados-intro">Prévia do layout. Os números reais vêm do banco de dados conforme as pessoas respondem.</p>
+
+    <div class="kpis">
+      <div class="kpi">
+        <p class="titulo kpi-numero">000</p>
+        <p class="kpi-legenda">pessoas responderam</p>
+      </div>
+      <div class="kpi">
+        <p class="titulo kpi-numero">0,0</p>
+        <p class="kpi-legenda">nota média de impacto (1 a 5)</p>
+      </div>
+      <div class="kpi">
+        <p class="titulo kpi-numero">0x</p>
+        <p class="kpi-legenda">escutas por semana (média)</p>
+      </div>
+      <div class="kpi">
+        <p class="titulo kpi-numero">00%</p>
+        <p class="kpi-legenda">na área mais impactada</p>
+      </div>
+    </div>
+
+    <div class="paineis">
+      <div class="painel painel-largo">
+        <h3 class="titulo painel-titulo">Áreas mais impactadas</h3>
+        <ul class="lista-limpa">
+          <!-- A largura de cada barra vem da variável --w. Depois o JavaScript vai trocar esse valor pelos dados reais. -->
+          <li class="linha-barra"><span class="barra-nome">Senso crítico</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:88%"></span></span><span class="barra-valor">--%</span></li>
+          <li class="linha-barra"><span class="barra-nome">Visão de mundo</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:74%"></span></span><span class="barra-valor">--%</span></li>
+          <li class="linha-barra"><span class="barra-nome">Motivação</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:61%"></span></span><span class="barra-valor">--%</span></li>
+          <li class="linha-barra"><span class="barra-nome">Identidade</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:52%"></span></span><span class="barra-valor">--%</span></li>
+          <li class="linha-barra"><span class="barra-nome">Estudos</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:40%"></span></span><span class="barra-valor">--%</span></li>
+          <li class="linha-barra"><span class="barra-nome">Autoestima</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:28%"></span></span><span class="barra-valor">--%</span></li>
         </ul>
+        <p class="painel-nota">Exemplo de layout, sem dados reais.</p>
+      </div>
+
+      <div class="painel">
+        <h3 class="titulo painel-titulo">Artistas mais citados</h3>
+        <ol class="lista-limpa">
+          <li class="linha-rank"><span class="titulo rank-pos">1</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
+          <li class="linha-rank"><span class="titulo rank-pos">2</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
+          <li class="linha-rank"><span class="titulo rank-pos">3</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
+          <li class="linha-rank"><span class="titulo rank-pos">4</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
+          <li class="linha-rank"><span class="titulo rank-pos">5</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
+        </ol>
       </div>
     </div>
-  
-    <div class="banner">
-      <div class="container">
-        <p>Preservando <span>hoje</span> para existirem <span>amanhã</span>.</p>
-      </div>
-    </div>
-  
-    <div class="social">
-      <div class="container">
-        <div class="boxes">
-          <div class="box">
-            <img src="assets/imgs/planet-earth_color.png">
-            <h4>Missão</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
-          <div class="box">
-            <img src="assets/imgs/lightbulb_color.png">
-            <h4>Visão</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
-          <div class="box">
-            <img src="assets/imgs/growth_color.png">
-            <h4>Valores</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
+  </div>
+</section>
+
+<!-- ============ FORMULÁRIO ============ -->
+<section class="papel" id="participar">
+  <div class="miolo miolo-estreito">
+    <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>05 — Responda</p>
+    <h2 class="titulo secao-titulo secao-titulo-margem">Entre na pesquisa</h2>
+
+    <form action="#" class="formulario">
+      <div class="campos">
+        <div class="campo">
+          <label class="campo-rotulo" for="f-area">Área da vida mais impactada</label>
+          <select class="campo-entrada" id="f-area">
+            <option>Senso crítico</option>
+            <option>Autoestima</option>
+            <option>Estudos</option>
+            <option>Motivação</option>
+            <option>Amizades</option>
+            <option>Visão de mundo</option>
+            <option>Escrita e linguagem</option>
+            <option>Identidade</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label class="campo-rotulo" for="f-artista">Artista que mais te marcou</label>
+          <input class="campo-entrada" id="f-artista" placeholder="Nome do artista" type="text"/>
+        </div>
+        <div class="campo">
+          <label class="campo-rotulo" for="f-nota">Nota de impacto (1 a 5)</label>
+          <select class="campo-entrada" id="f-nota">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label class="campo-rotulo" for="f-freq">Vezes por semana que ouve rap</label>
+          <input class="campo-entrada" id="f-freq" max="50" min="0" placeholder="0" type="number"/>
+        </div>
+        <div class="campo campo-inteiro">
+          <label class="campo-rotulo" for="f-depoimento">Seu depoimento (até 280 caracteres)</label>
+          <textarea class="campo-entrada" id="f-depoimento" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
         </div>
       </div>
-    </div>
-  
-    <div class="footer">
-      <div class="container">
-        <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023-2026</h4>
+      <div class="formulario-rodape">
+        <button class="btn btn-enviar" type="button">Enviar resposta</button>
+        <p class="formulario-nota">Protótipo: as validações em JavaScript (campos vazios, e-mail válido, senha mínima) entram na versão final.</p>
       </div>
-    </div>
-  </body>
+    </form>
+  </div>
+</section>
 
+</main>
+
+<footer class="rodape">
+  <div class="rodape-miolo">
+    <div class="rodape-esq">
+      <p class="rodape-marca"><img alt="" class="marca-logo" src="img/logo-branca.png"/><span class="titulo marca-nome">Rap é Compromisso</span></p>
+      <p class="rodape-texto">Projeto individual de Arnold Silva · Ciência da Computação · SPTech</p>
+      <p class="rodape-nota">Protótipo visual, não é a versão final.</p>
+    </div>
+    <ul class="tecnologias">
+      <li class="tec">HTML</li>
+      <li class="tec">CSS</li>
+      <li class="tec">JavaScript</li>
+      <li class="tec">Node.js</li>
+      <li class="tec">MySQL</li>
+      <li class="tec">VM Linux</li>
+    </ul>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  // Carrossel das minas: os botões ← e → rolam o trilho na horizontal.
+  // direcao = -1 (volta) ou 1 (avança). Evento direto no HTML (onclick), igual ao que vimos em aula.
+  function rolarMinas(direcao) {
+    var trilho = document.getElementById("minas-trilho");
+    var passo = 340; // largura aproximada de um card + espaço
+    trilho.scrollBy({ left: direcao * passo, behavior: "smooth" });
+  }
+</script>
+
+
+</main>
+
+</body>
 </html>

@@ -12,7 +12,7 @@ _Implementação de Referência para o seu Projeto de Primeiro Semestre_
 
 
 1. Crie, no Banco de Dados, as tabelas necessárias para o funcionamento deste projeto.
-- Siga as instruções no arquivo **/src/database/script-tabelas.sql**
+- Crie as tabelas diretamente no seu cliente MySQL (por exemplo MySQL Workbench). Não há script SQL no repositório — você fará a criação no Workbench conforme sua modelagem.
 
 
 3. Acesse o arquivo **app.js** e parametrize o ambiente.

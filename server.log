@@ -1,0 +1,78 @@
+
+    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
+    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
+    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
+    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
+    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
+    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
+    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
+    
+
+
+                                                                                                 
+    Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://localhost:3333 :. 
+
+
+    Você está rodando sua aplicação em ambiente de .:desenvolvimento:. 
+
+
+    	Se .:desenvolvimento:. você está se conectando ao banco local. 
+
+    	Se .:producao:. você está se conectando ao banco remoto. 
+
+
+    		Para alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'
+
+
+ACESSEI O USUARIO MODEL 
+ 
+		 >> Se aqui der erro de 'Error: connect ECONNREFUSED',
+ 		 >> verifique suas credenciais de acesso ao banco
+ 		 >> e se o servidor de seu BD está rodando corretamente. 
+
+ function entrar():  teste_api@example.com senha1234
+Executando a instrução SQL: 
+
+        SELECT id, nome, email, fk_empresa as empresaId FROM usuario WHERE email = 'teste_api@example.com' AND senha = 'senha1234';
+    
+[
+  {
+    id: 1,
+    nome: 'Usuario Teste',
+    email: 'teste_api@example.com',
+    empresaId: 1
+  }
+]
+
+Resultados encontrados: 1
+Resultados: [{"id":1,"nome":"Usuario Teste","email":"teste_api@example.com","empresaId":1}]
+[
+  {
+    id: 1,
+    nome: 'Usuario Teste',
+    email: 'teste_api@example.com',
+    empresaId: 1
+  }
+]
+Executando a instrução SQL: 
+SELECT * FROM aquario a WHERE fk_empresa = 1
+[]
+ACESSEI O USUARIO MODEL 
+ 
+		 >> Se aqui der erro de 'Error: connect ECONNREFUSED',
+ 		 >> verifique suas credenciais de acesso ao banco
+ 		 >> e se o servidor de seu BD está rodando corretamente. 
+
+ function entrar():  arnold@gmail.com 12345678
+Executando a instrução SQL: 
+
+        SELECT id, nome, email, fk_empresa as empresaId FROM usuario WHERE email = 'arnold@gmail.com' AND senha = '12345678';
+    
+[ { id: 2, nome: 'arnold', email: 'arnold@gmail.com', empresaId: 1 } ]
+
+Resultados encontrados: 1
+Resultados: [{"id":2,"nome":"arnold","email":"arnold@gmail.com","empresaId":1}]
+[ { id: 2, nome: 'arnold', email: 'arnold@gmail.com', empresaId: 1 } ]
+Executando a instrução SQL: 
+SELECT * FROM aquario a WHERE fk_empresa = 1
+[]
