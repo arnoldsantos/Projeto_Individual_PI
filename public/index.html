@@ -11,6 +11,9 @@
 
 <!-- funções compartilhadas (sessão, menu Entrar/Sair) -->
 <script src="js/sessao.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js"></script>
 </head>
 
 <body onload="atualizarMenuUsuario()">
@@ -191,7 +194,7 @@
       <article class="passo">
         <p class="titulo passo-numero">02</p>
         <h3 class="titulo passo-titulo">Conte seu impacto</h3>
-        <p class="passo-texto">Escolha a área da vida que o rap mudou, o artista que mais te marcou, dê uma nota de 1 a 5 e deixe um depoimento curto.</p>
+        <p class="passo-texto">Escolha a área da vida que o rap mudou, o artista que mais te marcou, faça uma avaliação detalhada (sub-notas + índice) e deixe um depoimento curto.</p>
       </article>
       <article class="passo">
         <p class="titulo passo-numero">03</p>
@@ -226,55 +229,52 @@
   <div class="miolo">
     <p class="rotulo rotulo-acento">04 — O dashboard</p>
     <h2 class="titulo secao-titulo secao-titulo-pequena">Os dados</h2>
-    <p class="dados-intro">Prévia do layout. Os números reais vêm do banco de dados conforme as pessoas respondem.</p>
+    <p class="dados-intro" id="dados-status">Carregando dados...</p>
 
     <div class="kpis">
       <div class="kpi">
-        <p class="titulo kpi-numero">000</p>
+        <p id="kpi-total" class="titulo kpi-numero">0</p>
         <p class="kpi-legenda">pessoas responderam</p>
       </div>
       <div class="kpi">
-        <p class="titulo kpi-numero">0,0</p>
-        <p class="kpi-legenda">nota média de impacto (1 a 5)</p>
+        <p id="kpi-avg-impact" class="titulo kpi-numero">0</p>
+        <p class="kpi-legenda">índice médio de impacto (0 a 100)</p>
       </div>
       <div class="kpi">
-        <p class="titulo kpi-numero">0x</p>
-        <p class="kpi-legenda">escutas por semana (média)</p>
+        <p id="kpi-avg-hours" class="titulo kpi-numero">0h</p>
+        <p class="kpi-legenda">horas ouvidas do artista (média)</p>
       </div>
       <div class="kpi">
-        <p class="titulo kpi-numero">00%</p>
-        <p class="kpi-legenda">na área mais impactada</p>
+        <p id="kpi-top-area" class="titulo kpi-numero">0%</p>
+        <p id="kpi-top-area-legenda" class="kpi-legenda">na área mais impactada</p>
       </div>
     </div>
 
     <div class="paineis">
       <div class="painel painel-largo">
         <h3 class="titulo painel-titulo">Áreas mais impactadas</h3>
-        <ul class="lista-limpa">
-          <!-- A largura de cada barra vem da variável --w. Depois o JavaScript vai trocar esse valor pelos dados reais. -->
-          <li class="linha-barra"><span class="barra-nome">Senso crítico</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:88%"></span></span><span class="barra-valor">--%</span></li>
-          <li class="linha-barra"><span class="barra-nome">Visão de mundo</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:74%"></span></span><span class="barra-valor">--%</span></li>
-          <li class="linha-barra"><span class="barra-nome">Motivação</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:61%"></span></span><span class="barra-valor">--%</span></li>
-          <li class="linha-barra"><span class="barra-nome">Identidade</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:52%"></span></span><span class="barra-valor">--%</span></li>
-          <li class="linha-barra"><span class="barra-nome">Estudos</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:40%"></span></span><span class="barra-valor">--%</span></li>
-          <li class="linha-barra"><span class="barra-nome">Autoestima</span><span aria-hidden="true" class="barra"><span class="barra-cheia" style="--w:28%"></span></span><span class="barra-valor">--%</span></li>
-        </ul>
-        <p class="painel-nota">Exemplo de layout, sem dados reais.</p>
+        <canvas id="chart-areas" height="200"></canvas>
       </div>
 
       <div class="painel">
         <h3 class="titulo painel-titulo">Artistas mais citados</h3>
-        <ol class="lista-limpa">
-          <li class="linha-rank"><span class="titulo rank-pos">1</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
-          <li class="linha-rank"><span class="titulo rank-pos">2</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
-          <li class="linha-rank"><span class="titulo rank-pos">3</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
-          <li class="linha-rank"><span class="titulo rank-pos">4</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
-          <li class="linha-rank"><span class="titulo rank-pos">5</span><span class="rank-nome">[ artista ]</span><span class="rank-n">[ n ]</span></li>
-        </ol>
+        <canvas id="chart-artists" height="200"></canvas>
+      </div>
+
+      <div class="painel">
+        <h3 class="titulo painel-titulo">Impacto emocional x prático</h3>
+        <canvas id="chart-impactos" height="200"></canvas>
+      </div>
+
+      <div class="painel">
+        <h3 class="titulo painel-titulo">Mudou o comportamento?</h3>
+        <canvas id="chart-comportamento" height="200"></canvas>
       </div>
     </div>
   </div>
 </section>
+
+
 
 <!-- ============ FORMULÁRIO ============ -->
 <section class="papel" id="participar">
@@ -282,7 +282,7 @@
     <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>05 — Responda</p>
     <h2 class="titulo secao-titulo secao-titulo-margem">Entre na pesquisa</h2>
 
-    <form action="#" class="formulario">
+    <form action="#" class="formulario" id="form-resposta">
       <div class="campos">
         <div class="campo">
           <label class="campo-rotulo" for="f-area">Área da vida mais impactada</label>
@@ -297,13 +297,15 @@
             <option>Identidade</option>
           </select>
         </div>
+
         <div class="campo">
           <label class="campo-rotulo" for="f-artista">Artista que mais te marcou</label>
           <input class="campo-entrada" id="f-artista" placeholder="Nome do artista" type="text"/>
         </div>
+
         <div class="campo">
-          <label class="campo-rotulo" for="f-nota">Nota de impacto (1 a 5)</label>
-          <select class="campo-entrada" id="f-nota">
+          <label class="campo-rotulo" for="f-impact-emocional">Impacto Emocional (1 a 5)</label>
+          <select class="campo-entrada" id="f-impact-emocional">
             <option>1</option>
             <option>2</option>
             <option>3</option>
@@ -311,15 +313,48 @@
             <option>5</option>
           </select>
         </div>
+
         <div class="campo">
-          <label class="campo-rotulo" for="f-freq">Vezes por semana que ouve rap</label>
-          <input class="campo-entrada" id="f-freq" max="50" min="0" placeholder="0" type="number"/>
+          <label class="campo-rotulo" for="f-impact-pratico">Impacto Prático / Comportamental (1 a 5)</label>
+          <select class="campo-entrada" id="f-impact-pratico">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
         </div>
+
+
+
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-horas">Horas ouvidas do artista no app (em horas)</label>
+          <input class="campo-entrada" id="f-horas" data-old-id="f-freq" max="1000" min="0" step="0.1" placeholder="0.0" type="number"/>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-beh-estudo">O artista já influenciou decisões sobre estudos/trabalho?</label>
+          <select class="campo-entrada" id="f-beh-estudo">
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-beh-conversa">Você já falou com outras pessoas sobre esse artista por um tema importante?</label>
+          <select class="campo-entrada" id="f-beh-conversa">
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </select>
+        </div>
+
         <div class="campo campo-inteiro">
           <label class="campo-rotulo" for="f-depoimento">Seu depoimento (até 280 caracteres)</label>
           <textarea class="campo-entrada" id="f-depoimento" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
         </div>
       </div>
+
       <div class="formulario-rodape">
         <button class="btn btn-enviar" type="button">Enviar resposta</button>
         <p class="formulario-nota">Protótipo: as validações em JavaScript (campos vazios, e-mail válido, senha mínima) entram na versão final.</p>
@@ -358,10 +393,7 @@
     var passo = 340; // largura aproximada de um card + espaço
     trilho.scrollBy({ left: direcao * passo, behavior: "smooth" });
   }
-</script>
+  </script>
 
 
 </main>
-
-</body>
-</html>
