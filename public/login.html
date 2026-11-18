@@ -124,9 +124,11 @@
           }, 800);
         });
       } else {
-        // login errado: o servidor devolve um texto explicando
-        resposta.text().then(function (texto) {
-          finalizarAguardar(texto);
+        // login errado: o servidor devolve { erro: "mensagem" }
+        resposta.json().then(function (json) {
+          finalizarAguardar(json.erro || "Não foi possível entrar.");
+        }).catch(function () {
+          finalizarAguardar("Não foi possível entrar. Confira os dados e tente de novo.");
         });
       }
 

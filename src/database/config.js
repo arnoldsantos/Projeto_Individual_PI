@@ -9,7 +9,10 @@ var mySqlConfig = {
     port: process.env.DB_PORT
 };
 
-function executar(instrucao) {
+// executar(instrucao, params): os valores vão em params usando "?" na instrução.
+// Isso evita injeção de SQL e resolve apóstrofos e acentos no texto.
+function executar(instrucao, params) {
+    params = params || [];
 
     if (process.env.AMBIENTE_PROCESSO !== "producao" && process.env.AMBIENTE_PROCESSO !== "desenvolvimento") {
         console.log("\nO AMBIENTE (produção OU desenvolvimento) NÃO FOI DEFINIDO EM .env OU dev.env OU app.js\n");
@@ -18,17 +21,25 @@ function executar(instrucao) {
 
     return new Promise(function (resolve, reject) {
         var conexao = mysql.createConnection(mySqlConfig);
-        conexao.connect();
-        conexao.query(instrucao, function (erro, resultados) {
-            conexao.end();
-            if (erro) {
-                reject(erro);
+
+        conexao.connect(function (erroConexao) {
+            if (erroConexao) {
+                console.log("ERRO AO CONECTAR NO MySQL SERVER:", erroConexao.sqlMessage || erroConexao.message);
+                conexao.destroy();
+                return reject(erroConexao);
             }
-            console.log(resultados);
-            resolve(resultados);
+
+            conexao.query(instrucao, params, function (erro, resultados) {
+                conexao.end();
+                if (erro) {
+                    return reject(erro);
+                }
+                resolve(resultados);
+            });
         });
+
         conexao.on('error', function (erro) {
-            return ("ERRO NO MySQL SERVER: ", erro.sqlMessage);
+            console.log("ERRO NO MySQL SERVER:", erro.sqlMessage || erro.message);
         });
     });
 }

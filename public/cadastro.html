@@ -206,8 +206,10 @@
         }, 2000);
       } else {
         // erro do servidor (ex.: 409 "Este e-mail já está cadastrado!")
-        resposta.text().then(function (texto) {
-          finalizarAguardar(texto);
+        resposta.json().then(function (json) {
+          finalizarAguardar(json.erro || "Não foi possível cadastrar.");
+        }).catch(function () {
+          finalizarAguardar("Não foi possível cadastrar. Confira os dados e tente de novo.");
         });
       }
 

@@ -3,3 +3,8 @@ node_modules
 package-lock.json
 
 .github
+
+# variáveis de ambiente e log do servidor
+.env
+.env.dev
+server.log

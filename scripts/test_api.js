@@ -7,10 +7,9 @@ async function run() {
     const nome = 'Usuario Teste';
     const email = 'teste_api@example.com';
     const senha = 'senha1234';
-    const fkEmpresa = 1;
 
     try {
-      const res = await usuarioModel.cadastrar(nome, email, senha, fkEmpresa);
+      const res = await usuarioModel.cadastrar(nome, email, senha);
       console.log('Cadastro OK, insertId:', res.insertId);
     } catch (e) {
       console.log('Cadastro falhou (pode já existir):', e.sqlMessage || e.message || e);

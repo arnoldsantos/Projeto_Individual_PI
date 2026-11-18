@@ -1,4 +1,4 @@
-// script mínimo para criar a tabela usuario (apenas campos essenciais para teste)
+// Script mínimo para criar as tabelas do projeto conforme o banco real
 require('dotenv').config({ path: './.env.dev' });
 const db = require('../src/database/config');
 
@@ -10,33 +10,18 @@ const sqls = [
     senha VARCHAR(255) NOT NULL
   );`
   , `CREATE TABLE IF NOT EXISTS resposta (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    area VARCHAR(100) NOT NULL,
-    artista VARCHAR(200) NOT NULL,
+    idResposta INT PRIMARY KEY AUTO_INCREMENT,
+    fk_usuario INT NULL,
+    area VARCHAR(40) NOT NULL,
+    artista VARCHAR(80) NOT NULL,
     impacto_emocional TINYINT NOT NULL,
     impacto_pratico TINYINT NOT NULL,
-    impacto_social TINYINT NOT NULL,
-    impacto_media DECIMAL(4,2) NOT NULL,
-    impacto_slider TINYINT NOT NULL,
-    impacto_composite INT NOT NULL,
-    horas_ouvidas DECIMAL(8,2) DEFAULT 0,
+    horas DECIMAL(8,2) DEFAULT 0,
     influenciou_estudo TINYINT DEFAULT 0,
     conversou_sobre TINYINT DEFAULT 0,
-    depoimento VARCHAR(1000),
-    usuario_id INT NULL,
-    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
-  );`
-  , `CREATE TABLE IF NOT EXISTS artista_aggregate (
-    artista VARCHAR(200) PRIMARY KEY,
-    respostas INT DEFAULT 0,
-    avg_composite DECIMAL(6,2) DEFAULT 0,
-    total_hours DECIMAL(10,2) DEFAULT 0,
-    atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );`
-  , `CREATE TABLE IF NOT EXISTS area_aggregate (
-    area VARCHAR(100) PRIMARY KEY,
-    respostas INT DEFAULT 0,
-    atualizado_em DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    depoimento VARCHAR(280),
+    dtResposta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_resposta_usuario FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
   );`
 ];
 
@@ -44,7 +29,7 @@ async function run() {
   try {
     for (const s of sqls) {
       await db.executar(s);
-      console.log('OK:', s.split('\n')[0].trim().slice(0,60));
+      console.log('OK:', s.split('\n')[0].trim().slice(0, 60));
     }
     console.log('Tabelas criadas/validadas.');
     process.exit(0);

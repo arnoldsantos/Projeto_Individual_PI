@@ -12,11 +12,11 @@
 <!-- funções compartilhadas (sessão, menu Entrar/Sair) -->
 <script src="js/sessao.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="js/dashboard.js"></script>
 </head>
 
-<body onload="atualizarMenuUsuario()">
+<body onload="iniciarPagina()">
 
 <div class="site">
 
@@ -231,44 +231,90 @@
     <h2 class="titulo secao-titulo secao-titulo-pequena">Os dados</h2>
     <p class="dados-intro" id="dados-status">Carregando dados...</p>
 
-    <div class="kpis">
-      <div class="kpi">
-        <p id="kpi-total" class="titulo kpi-numero">0</p>
-        <p class="kpi-legenda">pessoas responderam</p>
-      </div>
-      <div class="kpi">
-        <p id="kpi-avg-impact" class="titulo kpi-numero">0</p>
-        <p class="kpi-legenda">índice médio de impacto (0 a 100)</p>
-      </div>
-      <div class="kpi">
-        <p id="kpi-avg-hours" class="titulo kpi-numero">0h</p>
-        <p class="kpi-legenda">horas ouvidas do artista (média)</p>
-      </div>
-      <div class="kpi">
-        <p id="kpi-top-area" class="titulo kpi-numero">0%</p>
-        <p id="kpi-top-area-legenda" class="kpi-legenda">na área mais impactada</p>
-      </div>
+    <div class="dados-erro" id="dados-erro">
+      <p class="dados-erro-texto">Não foi possível carregar os dados agora.</p>
+      <button class="btn btn-vazado" onclick="carregarTudo()" type="button">Tentar de novo</button>
     </div>
 
-    <div class="paineis">
-      <div class="painel painel-largo">
-        <h3 class="titulo painel-titulo">Áreas mais impactadas</h3>
-        <canvas id="chart-areas" height="200"></canvas>
+    <div class="dados-vazio" id="dados-vazio">
+      <p class="dados-vazio-titulo titulo">Ainda sem respostas</p>
+      <p class="dados-vazio-texto">Seja a primeira pessoa a contar como o rap marcou a sua vida.</p>
+    </div>
+
+    <div class="dados-preenchidos" id="dados-conteudo">
+      <div class="kpis">
+        <div class="kpi">
+          <p id="kpi-total" class="titulo kpi-numero">0</p>
+          <p class="kpi-legenda">pessoas responderam</p>
+        </div>
+        <div class="kpi">
+          <p id="kpi-avg-impact" class="titulo kpi-numero">0</p>
+          <p class="kpi-legenda">índice médio de impacto (0 a 100)</p>
+        </div>
+        <div class="kpi">
+          <p id="kpi-avg-hours" class="titulo kpi-numero">0h</p>
+          <p class="kpi-legenda">horas ouvidas do artista (média)</p>
+        </div>
+        <div class="kpi">
+          <p id="kpi-top-area" class="titulo kpi-numero">0%</p>
+          <p id="kpi-top-area-legenda" class="kpi-legenda">na área mais impactada</p>
+        </div>
       </div>
 
-      <div class="painel">
-        <h3 class="titulo painel-titulo">Artistas mais citados</h3>
-        <canvas id="chart-artists" height="200"></canvas>
+      <div class="paineis">
+        <div class="painel painel-largo">
+          <h3 class="titulo painel-titulo">Áreas mais impactadas</h3>
+          <canvas id="chart-areas" height="200"></canvas>
+        </div>
+
+        <div class="painel">
+          <h3 class="titulo painel-titulo">Artistas mais citados (top 10)</h3>
+          <canvas id="chart-artists" height="200"></canvas>
+        </div>
+
+        <div class="painel">
+          <h3 class="titulo painel-titulo">Impacto emocional x prático</h3>
+          <canvas id="chart-impactos" height="200"></canvas>
+        </div>
+
+        <div class="painel">
+          <h3 class="titulo painel-titulo">Influenciou estudo?</h3>
+          <canvas id="chart-estudo" height="200"></canvas>
+        </div>
+
+        <div class="painel">
+          <h3 class="titulo painel-titulo">Conversou sobre?</h3>
+          <canvas id="chart-conversa" height="200"></canvas>
+        </div>
+
+        <div class="painel">
+          <h3 class="titulo painel-titulo">Impacto médio por área</h3>
+          <canvas id="chart-area-impacto" height="200"></canvas>
+        </div>
       </div>
 
-      <div class="painel">
-        <h3 class="titulo painel-titulo">Impacto emocional x prático</h3>
-        <canvas id="chart-impactos" height="200"></canvas>
+      <div class="bloco-dados">
+        <h3 class="titulo painel-titulo">Ranking de artistas</h3>
+        <div class="tabela-rolagem">
+          <table class="tabela-ranking">
+            <thead>
+              <tr>
+                <th scope="col">Artista</th>
+                <th scope="col">Menções</th>
+                <th scope="col">Horas totais</th>
+                <th scope="col">Horas médias</th>
+                <th scope="col">Impacto médio</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-corpo"></tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="painel">
-        <h3 class="titulo painel-titulo">Mudou o comportamento?</h3>
-        <canvas id="chart-comportamento" height="200"></canvas>
+      <div class="bloco-dados">
+        <h3 class="titulo painel-titulo">Mural de depoimentos</h3>
+        <p class="bloco-dados-intro">Histórias contadas por quem respondeu. Sem nome nem e-mail.</p>
+        <div class="mural" id="mural-lista"></div>
       </div>
     </div>
   </div>
@@ -282,7 +328,13 @@
     <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>05 — Responda</p>
     <h2 class="titulo secao-titulo secao-titulo-margem">Entre na pesquisa</h2>
 
-    <form action="#" class="formulario" id="form-resposta">
+    <!-- Aviso para quem não está logado -->
+    <div class="formulario form-aviso" id="form-deslogado">
+      <p class="form-aviso-texto">Para responder à pesquisa, entre na sua conta. Assim a resposta fica ligada a você e o mural continua sem nome nem e-mail.</p>
+      <a class="btn btn-enviar" href="login.html">Entrar</a>
+    </div>
+
+    <form action="#" class="formulario" id="form-logado">
       <div class="campos">
         <div class="campo">
           <label class="campo-rotulo" for="f-area">Área da vida mais impactada</label>
@@ -300,7 +352,8 @@
 
         <div class="campo">
           <label class="campo-rotulo" for="f-artista">Artista que mais te marcou</label>
-          <input class="campo-entrada" id="f-artista" placeholder="Nome do artista" type="text"/>
+          <input class="campo-entrada" id="f-artista" list="lista-artistas" maxlength="80" placeholder="Nome do artista" type="text"/>
+          <datalist id="lista-artistas"></datalist>
         </div>
 
         <div class="campo">
@@ -325,12 +378,9 @@
           </select>
         </div>
 
-
-
-
         <div class="campo">
           <label class="campo-rotulo" for="f-horas">Horas ouvidas do artista no app (em horas)</label>
-          <input class="campo-entrada" id="f-horas" data-old-id="f-freq" max="1000" min="0" step="0.1" placeholder="0.0" type="number"/>
+          <input class="campo-entrada" id="f-horas" max="1000" min="0" step="0.1" placeholder="0.0" type="number"/>
         </div>
 
         <div class="campo">
@@ -351,13 +401,14 @@
 
         <div class="campo campo-inteiro">
           <label class="campo-rotulo" for="f-depoimento">Seu depoimento (até 280 caracteres)</label>
-          <textarea class="campo-entrada" id="f-depoimento" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
+          <textarea class="campo-entrada" id="f-depoimento" maxlength="280" onkeyup="contarDepoimento()" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
+          <small class="contador" id="contador-depoimento">0 / 280</small>
         </div>
       </div>
 
       <div class="formulario-rodape">
-        <button class="btn btn-enviar" type="button">Enviar resposta</button>
-        <p class="formulario-nota">Protótipo: as validações em JavaScript (campos vazios, e-mail válido, senha mínima) entram na versão final.</p>
+        <button class="btn btn-enviar" onclick="enviarResposta()" type="button">Enviar resposta</button>
+        <p class="formulario-status" id="form-status" role="status"></p>
       </div>
     </form>
   </div>
@@ -395,5 +446,5 @@
   }
   </script>
 
-
-</main>
+</body>
+</html>
