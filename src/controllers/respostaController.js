@@ -38,6 +38,10 @@ function cadastrar(req, res) {
     if (area.length > 40) {
         return res.status(400).json({ erro: "A área deve ter no máximo 40 caracteres." });
     }
+    var areaOutra = texto(body.area_outra);
+    if (areaOutra && areaOutra.length > 40) {
+        return res.status(400).json({ erro: "A área (outra) deve ter no máximo 40 caracteres." });
+    }
 
     var artista = texto(body.artista);
     if (artista === "") {
@@ -47,19 +51,14 @@ function cadastrar(req, res) {
         return res.status(400).json({ erro: "O artista deve ter no máximo 80 caracteres." });
     }
 
-    var impactoEmocional = inteiro(body.impacto_emocional);
-    if (impactoEmocional === null || impactoEmocional < 1 || impactoEmocional > 5) {
-        return res.status(400).json({ erro: "O impacto emocional deve ser um número inteiro de 1 a 5." });
-    }
-
-    var impactoPratico = inteiro(body.impacto_pratico);
-    if (impactoPratico === null || impactoPratico < 1 || impactoPratico > 5) {
-        return res.status(400).json({ erro: "O impacto prático deve ser um número inteiro de 1 a 5." });
+    var impacto = inteiro(body.impacto);
+    if (impacto === null || impacto < 1 || impacto > 5) {
+        return res.status(400).json({ erro: "O impacto deve ser um número inteiro de 1 a 5." });
     }
 
     var horas = Number(body.horas_ouvidas);
-    if (isNaN(horas) || horas < 0 || horas > 1000) {
-        return res.status(400).json({ erro: "As horas ouvidas devem ser um número entre 0 e 1000." });
+    if (isNaN(horas) || horas < 0 || horas > 168) {
+        return res.status(400).json({ erro: "As horas ouvidas devem ser um número entre 0 e 168." });
     }
 
     var depoimento = texto(body.depoimento);
@@ -70,12 +69,10 @@ function cadastrar(req, res) {
     var resposta = {
         fk_usuario: fkUsuario,
         area: area,
+        area_outra: areaOutra || null,
         artista: artista,
-        impacto_emocional: impactoEmocional,
-        impacto_pratico: impactoPratico,
+        impacto: impacto,
         horas: horas,
-        influenciou_estudo: simOuNao(body.influenciou_estudo),
-        conversou_sobre: simOuNao(body.conversou_sobre),
         depoimento: depoimento
     };
 
@@ -142,48 +139,13 @@ function ranking(req, res) {
 }
 
 function impactos(req, res) {
-    respostaModel.obterImpactos().then(function (resultado) {
-        var linha = resultado && resultado[0] ? resultado[0] : {};
-        res.json({
-            media_emocional: Number(linha.media_emocional) || 0,
-            media_pratico: Number(linha.media_pratico) || 0
-        });
-    }).catch(function (erro) {
-        console.log("Erro ao obter impactos:", erro.sqlMessage || erro.message);
-        res.status(500).json({ erro: "Não foi possível carregar os impactos." });
-    });
+    // endpoint removed in the new schema
+    res.status(404).json({ erro: "Rota removida: use /respostas/horas-impacto e /respostas/minas." });
 }
 
 function comportamento(req, res) {
-    respostaModel.obterComportamento().then(function (resultado) {
-        var linha = resultado && resultado[0] ? resultado[0] : {};
-        var total = Number(linha.total) || 0;
-
-        function pct(parte) {
-            if (!total) {
-                return 0;
-            }
-            return Math.round((Number(parte) || 0) / total * 100);
-        }
-
-        res.json({
-            estudo: {
-                sim: Number(linha.estudo_sim) || 0,
-                nao: Number(linha.estudo_nao) || 0,
-                pct_sim: pct(linha.estudo_sim),
-                pct_nao: pct(linha.estudo_nao)
-            },
-            conversa: {
-                sim: Number(linha.conversa_sim) || 0,
-                nao: Number(linha.conversa_nao) || 0,
-                pct_sim: pct(linha.conversa_sim),
-                pct_nao: pct(linha.conversa_nao)
-            }
-        });
-    }).catch(function (erro) {
-        console.log("Erro ao obter comportamento:", erro.sqlMessage || erro.message);
-        res.status(500).json({ erro: "Não foi possível carregar o comportamento." });
-    });
+    // comportamento endpoint removed
+    res.status(404).json({ erro: "Rota removida." });
 }
 
 function areasImpacto(req, res) {
@@ -195,6 +157,59 @@ function areasImpacto(req, res) {
     });
 }
 
+function horasImpacto(req, res) {
+    respostaModel.obterHorasImpacto().then(function (resultado) {
+        // ensure notes 1..5 present
+        var mapa = {
+            1: { quantidade: 0, horas_media: 0 },
+            2: { quantidade: 0, horas_media: 0 },
+            3: { quantidade: 0, horas_media: 0 },
+            4: { quantidade: 0, horas_media: 0 },
+            5: { quantidade: 0, horas_media: 0 }
+        };
+        for (var i = 0; i < resultado.length; i++) {
+            var linha = resultado[i];
+            var nota = Number(linha.nota) || 0;
+            if (nota >= 1 && nota <= 5) {
+                mapa[nota] = { quantidade: Number(linha.quantidade) || 0, horas_media: Number(linha.horas_media) || 0 };
+            }
+        }
+        res.json(mapa);
+    }).catch(function (erro) {
+        console.log("Erro ao obter horas x impacto:", erro.sqlMessage || erro.message);
+        res.status(500).json({ erro: "Não foi possível carregar horas x impacto." });
+    });
+}
+
+function minas(req, res) {
+    // the list of minas is rendered in the frontend; we count occurrences in artista
+    var minasLista = ["Duquesa", "Ebony", "Slipmami", "Tasha", "Tracie", "Tasha & Tracie", "Julia Costa", "Nanda Tsunami"];
+    respostaModel.obterArtistasSimples().then(function (linhas) {
+        var contagem = {};
+        var totalComMina = 0;
+        for (var i = 0; i < minasLista.length; i++) {
+            contagem[minasLista[i]] = 0;
+        }
+        for (var j = 0; j < linhas.length; j++) {
+            var artista = (linhas[j].artista || "").toLowerCase();
+            var encontrou = false;
+            // check each mine name presence
+            for (var k = 0; k < minasLista.length; k++) {
+                var nome = minasLista[k].toLowerCase();
+                if (artista.indexOf(nome) !== -1) {
+                    contagem[minasLista[k]] = (contagem[minasLista[k]] || 0) + 1;
+                    encontrou = true;
+                }
+            }
+            if (encontrou) totalComMina++;
+        }
+        res.json({ minas: contagem, total_com_mina: totalComMina });
+    }).catch(function (erro) {
+        console.log("Erro ao obter minas:", erro.sqlMessage || erro.message);
+        res.status(500).json({ erro: "Não foi possível carregar os dados das minas." });
+    });
+}
+
 module.exports = {
     cadastrar,
     agregados,
@@ -202,5 +217,7 @@ module.exports = {
     ranking,
     impactos,
     comportamento,
-    areasImpacto
+    areasImpacto,
+    horasImpacto,
+    minas
 };

@@ -19,15 +19,25 @@ router.get('/ranking', function (req, res) {
 });
 
 router.get('/impactos', function (req, res) {
-    respostaController.impactos(req, res);
+    // removed
+    res.status(404).json({ erro: 'Rota removida' });
 });
 
 router.get('/comportamento', function (req, res) {
-    respostaController.comportamento(req, res);
+    // removed
+    res.status(404).json({ erro: 'Rota removida' });
 });
 
 router.get('/areas-impacto', function (req, res) {
     respostaController.areasImpacto(req, res);
+});
+
+router.get('/horas-impacto', function (req, res) {
+    respostaController.horasImpacto(req, res);
+});
+
+router.get('/minas', function (req, res) {
+    respostaController.minas(req, res);
 });
 
 module.exports = router;

@@ -337,6 +337,7 @@ img { max-width: 100%; display: block; }
 .mina-info { padding: 18px 18px 22px; }
 .mina-nome { margin: 0 0 6px; font-size: 42px; line-height: 1; }
 .mina-texto { margin: 0 0 16px; font-size: 15px; color: var(--texto-suave); }
+.mina-selo { margin-top: 8px; font-weight: 700; color: var(--acento); }
 .mina-spotify {
   display: inline-flex; align-items: center; gap: 10px;
   min-height: 44px; padding: 0 18px;

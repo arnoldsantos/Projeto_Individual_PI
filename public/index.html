@@ -30,6 +30,7 @@
       <a class="menu-link" href="#sobre">Sobre</a>
       <a class="menu-link" href="#minas">As minas</a>
       <a class="menu-link" href="#como-funciona">Como funciona</a>
+      <a class="menu-link" href="#participar">Participar</a>
       <a class="menu-link" href="#dados">Dados</a>
       <!-- Se estiver logado, o botão vira "Sair · Nome" (função em js/sessao.js) -->
       <a class="menu-link menu-link-destaque" href="login.html" id="menu_entrar" onclick="return cliqueEntrar()">Entrar</a>
@@ -194,7 +195,7 @@
       <article class="passo">
         <p class="titulo passo-numero">02</p>
         <h3 class="titulo passo-titulo">Conte seu impacto</h3>
-        <p class="passo-texto">Escolha a área da vida que o rap mudou, o artista que mais te marcou, faça uma avaliação detalhada (sub-notas + índice) e deixe um depoimento curto.</p>
+        <p class="passo-texto">Escolha a área da vida que o rap mudou, o artista que mais te marcou, diga o quanto o rap mudou essa área (nota de 1 a 5) e deixe um depoimento curto.</p>
       </article>
       <article class="passo">
         <p class="titulo passo-numero">03</p>
@@ -221,6 +222,91 @@
       <li class="titulo area">Identidade</li>
     </ul>
     
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<!-- FORMULÁRIO (movido para antes do dashboard) -->
+<section class="papel" id="participar">
+  <div class="miolo miolo-estreito">
+    <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>05 — Responda</p>
+    <h2 class="titulo secao-titulo secao-titulo-margem">Entre na pesquisa</h2>
+
+    <!-- Aviso para quem não está logado -->
+    <div class="formulario form-aviso" id="form-deslogado">
+      <p class="form-aviso-texto">Para responder à pesquisa, entre na sua conta. Assim a resposta fica ligada a você e o mural continua sem nome nem e-mail.</p>
+      <a class="btn btn-enviar" href="login.html">Entrar</a>
+    </div>
+
+    <form action="#" class="formulario" id="form-logado">
+      <div class="campos">
+        <div class="campo">
+          <label class="campo-rotulo" for="f-area">Área da vida mais impactada</label>
+          <select class="campo-entrada" id="f-area" onchange="onAreaChange()">
+            <option>Senso crítico</option>
+            <option>Autoestima</option>
+            <option>Estudos</option>
+            <option>Motivação</option>
+            <option>Superação</option>
+            <option>Amizades</option>
+            <option>Visão de mundo</option>
+            <option>Escrita e linguagem</option>
+            <option>Identidade</option>
+            <option>Família</option>
+            <option>Trabalho e carreira</option>
+            <option>Saúde mental</option>
+            <option>Cidadania e política</option>
+            <option>Cultura e história</option>
+            <option>Outra</option>
+          </select>
+        </div>
+
+        <div class="campo" id="campo-area-outra" style="display:none;">
+          <label class="campo-rotulo" for="f-area-outra">Outra (escreva)</label>
+          <input class="campo-entrada" id="f-area-outra" maxlength="40" placeholder="Escreva a área" type="text"/>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-artista">Artista que mais te marcou</label>
+          <input class="campo-entrada" id="f-artista" list="lista-artistas" maxlength="80" placeholder="Nome do artista" type="text"/>
+          <datalist id="lista-artistas">
+            <option value="Duquesa"></option>
+            <option value="Ebony"></option>
+            <option value="Slipmami"></option>
+            <option value="Tasha &amp; Tracie"></option>
+            <option value="Julia Costa"></option>
+            <option value="Nanda Tsunami"></option>
+          </datalist>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-impacto">Na área que você escolheu, quanto o rap mudou a sua vida? (1 = quase nada · 5 = mudou muito)</label>
+          <select class="campo-entrada" id="f-impacto">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo-rotulo" for="f-horas">Horas por semana que você ouve esse artista (estimativa)</label>
+          <input class="campo-entrada" id="f-horas" max="168" min="0" step="0.1" placeholder="0.0" type="number"/>
+        </div>
+
+        <div class="campo campo-inteiro">
+          <label class="campo-rotulo" for="f-depoimento">Seu depoimento (até 280 caracteres)</label>
+          <textarea class="campo-entrada" id="f-depoimento" maxlength="280" onkeyup="contarDepoimento()" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
+          <small class="contador" id="contador-depoimento">0 / 280</small>
+        </div>
+      </div>
+
+      <div class="formulario-rodape">
+        <button class="btn btn-enviar" onclick="enviarResposta()" type="button">Enviar resposta</button>
+        <p class="formulario-status" id="form-status" role="status"></p>
+      </div>
+    </form>
   </div>
 </section>
 
@@ -268,28 +354,8 @@
         </div>
 
         <div class="painel">
-          <h3 class="titulo painel-titulo">Artistas mais citados (top 10)</h3>
-          <canvas id="chart-artists" height="200"></canvas>
-        </div>
-
-        <div class="painel">
-          <h3 class="titulo painel-titulo">Impacto emocional x prático</h3>
-          <canvas id="chart-impactos" height="200"></canvas>
-        </div>
-
-        <div class="painel">
-          <h3 class="titulo painel-titulo">Influenciou estudo?</h3>
-          <canvas id="chart-estudo" height="200"></canvas>
-        </div>
-
-        <div class="painel">
-          <h3 class="titulo painel-titulo">Conversou sobre?</h3>
-          <canvas id="chart-conversa" height="200"></canvas>
-        </div>
-
-        <div class="painel">
-          <h3 class="titulo painel-titulo">Impacto médio por área</h3>
-          <canvas id="chart-area-impacto" height="200"></canvas>
+          <h3 class="titulo painel-titulo">Horas × impacto (média de horas por nota)</h3>
+          <canvas id="chart-horas-impacto" height="200"></canvas>
         </div>
       </div>
 
@@ -298,10 +364,9 @@
         <div class="tabela-rolagem">
           <table class="tabela-ranking">
             <thead>
-              <tr>
+                <tr>
                 <th scope="col">Artista</th>
                 <th scope="col">Menções</th>
-                <th scope="col">Horas totais</th>
                 <th scope="col">Horas médias</th>
                 <th scope="col">Impacto médio</th>
               </tr>
@@ -322,97 +387,7 @@
 
 
 
-<!-- ============ FORMULÁRIO ============ -->
-<section class="papel" id="participar">
-  <div class="miolo miolo-estreito">
-    <p class="rotulo"><span aria-hidden="true" class="quadradinho"></span>05 — Responda</p>
-    <h2 class="titulo secao-titulo secao-titulo-margem">Entre na pesquisa</h2>
 
-    <!-- Aviso para quem não está logado -->
-    <div class="formulario form-aviso" id="form-deslogado">
-      <p class="form-aviso-texto">Para responder à pesquisa, entre na sua conta. Assim a resposta fica ligada a você e o mural continua sem nome nem e-mail.</p>
-      <a class="btn btn-enviar" href="login.html">Entrar</a>
-    </div>
-
-    <form action="#" class="formulario" id="form-logado">
-      <div class="campos">
-        <div class="campo">
-          <label class="campo-rotulo" for="f-area">Área da vida mais impactada</label>
-          <select class="campo-entrada" id="f-area">
-            <option>Senso crítico</option>
-            <option>Autoestima</option>
-            <option>Estudos</option>
-            <option>Motivação</option>
-            <option>Amizades</option>
-            <option>Visão de mundo</option>
-            <option>Escrita e linguagem</option>
-            <option>Identidade</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-artista">Artista que mais te marcou</label>
-          <input class="campo-entrada" id="f-artista" list="lista-artistas" maxlength="80" placeholder="Nome do artista" type="text"/>
-          <datalist id="lista-artistas"></datalist>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-impact-emocional">Impacto Emocional (1 a 5)</label>
-          <select class="campo-entrada" id="f-impact-emocional">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-impact-pratico">Impacto Prático / Comportamental (1 a 5)</label>
-          <select class="campo-entrada" id="f-impact-pratico">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-horas">Horas ouvidas do artista no app (em horas)</label>
-          <input class="campo-entrada" id="f-horas" max="1000" min="0" step="0.1" placeholder="0.0" type="number"/>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-beh-estudo">O artista já influenciou decisões sobre estudos/trabalho?</label>
-          <select class="campo-entrada" id="f-beh-estudo">
-            <option value="nao">Não</option>
-            <option value="sim">Sim</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label class="campo-rotulo" for="f-beh-conversa">Você já falou com outras pessoas sobre esse artista por um tema importante?</label>
-          <select class="campo-entrada" id="f-beh-conversa">
-            <option value="nao">Não</option>
-            <option value="sim">Sim</option>
-          </select>
-        </div>
-
-        <div class="campo campo-inteiro">
-          <label class="campo-rotulo" for="f-depoimento">Seu depoimento (até 280 caracteres)</label>
-          <textarea class="campo-entrada" id="f-depoimento" maxlength="280" onkeyup="contarDepoimento()" placeholder="Conte, com suas palavras, o que o rap mudou na sua vida." rows="4"></textarea>
-          <small class="contador" id="contador-depoimento">0 / 280</small>
-        </div>
-      </div>
-
-      <div class="formulario-rodape">
-        <button class="btn btn-enviar" onclick="enviarResposta()" type="button">Enviar resposta</button>
-        <p class="formulario-status" id="form-status" role="status"></p>
-      </div>
-    </form>
-  </div>
-</section>
 
 </main>
 
@@ -421,7 +396,6 @@
     <div class="rodape-esq">
       <p class="rodape-marca"><img alt="" class="marca-logo" src="img/logo-branca.png"/><span class="titulo marca-nome">Rap é Compromisso</span></p>
       <p class="rodape-texto">Projeto individual de Arnold Silva · Ciência da Computação · SPTech</p>
-      <p class="rodape-nota">Protótipo visual, não é a versão final.</p>
     </div>
     <ul class="tecnologias">
       <li class="tec">HTML</li>

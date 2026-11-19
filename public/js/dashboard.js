@@ -11,10 +11,9 @@ var COR_LINHA = "rgba(239, 230, 210, 0.16)";
 // --- guarda os gráficos para atualizar sem recriar ---
 var areasChart = null;
 var artistsChart = null;
-var impactosChart = null;
+var horasImpactoChart = null;
 var estudoChart = null;
 var conversaChart = null;
-var areaImpactoChart = null;
 
 // --- controle das requisições e dos estados da tela ---
 var primeiraCarga = true;
@@ -77,15 +76,14 @@ function mostrarCarregando() {
 function carregarTudo() {
     houveErro = false;
     totalRespostas = 0;
-    requisicoesPendentes = 6;
+    requisicoesPendentes = 5;
     mostrarCarregando();
 
     carregarAgregados();
     carregarRanking();
     carregarDepoimentos();
-    carregarImpactos();
-    carregarComportamento();
-    carregarAreasImpacto();
+    carregarHorasImpacto();
+    carregarMinas();
 }
 
 function finalizarRequisicao(deuErro) {
@@ -135,10 +133,7 @@ function finalizarRequisicao(deuErro) {
 function redimensionarGraficos() {
     if (areasChart) { areasChart.resize(); }
     if (artistsChart) { artistsChart.resize(); }
-    if (impactosChart) { impactosChart.resize(); }
-    if (estudoChart) { estudoChart.resize(); }
-    if (conversaChart) { conversaChart.resize(); }
-    if (areaImpactoChart) { areaImpactoChart.resize(); }
+    if (horasImpactoChart) { horasImpactoChart.resize(); }
 }
 
 // ---------- formulário ----------
@@ -156,6 +151,17 @@ function atualizarFormulario() {
     }
     if (logado) {
         contarDepoimento();
+    }
+}
+
+function onAreaChange() {
+    var area = q('f-area');
+    var campo = q('campo-area-outra');
+    if (!area || !campo) return;
+    if (area.value === 'Outra') {
+        campo.style.display = 'block';
+    } else {
+        campo.style.display = 'none';
     }
 }
 
@@ -185,13 +191,16 @@ function enviarResposta() {
 
     var area = q("f-area").value;
     var artista = q("f-artista").value.trim();
-    var emocional = Number(q("f-impact-emocional").value);
-    var pratico = Number(q("f-impact-pratico").value);
+    var impactoVal = Number(q("f-impacto").value);
     var horasTexto = q("f-horas").value.trim();
     var horas = horasTexto === "" ? 0 : Number(horasTexto);
-    var estudo = q("f-beh-estudo").value;
-    var conversa = q("f-beh-conversa").value;
     var depoimento = q("f-depoimento").value.trim();
+    var area = q("f-area").value;
+    var areaOutra = null;
+    if (area === "Outra") {
+        var campoOutra = q("f-area-outra");
+        if (campoOutra) areaOutra = campoOutra.value.trim();
+    }
 
     if (artista === "") {
         mostrarStatusFormulario("Digite o nome do artista que mais te marcou.", true);
@@ -201,8 +210,8 @@ function enviarResposta() {
         mostrarStatusFormulario("O nome do artista pode ter no máximo 80 caracteres.", true);
         return;
     }
-    if (isNaN(horas) || horas < 0 || horas > 1000) {
-        mostrarStatusFormulario("Digite as horas ouvidas (entre 0 e 1000).", true);
+    if (isNaN(horas) || horas < 0 || horas > 168) {
+        mostrarStatusFormulario("Digite as horas ouvidas (entre 0 e 168).", true);
         return;
     }
     if (depoimento.length > 280) {
@@ -213,12 +222,10 @@ function enviarResposta() {
     var corpo = {
         fk_usuario: Number(sessionStorage.ID_USUARIO),
         area: area,
+        area_outra: areaOutra,
         artista: artista,
-        impacto_emocional: emocional,
-        impacto_pratico: pratico,
+        impacto: impactoVal,
         horas_ouvidas: horas,
-        influenciou_estudo: estudo === "sim" ? "sim" : "nao",
-        conversou_sobre: conversa === "sim" ? "sim" : "nao",
         depoimento: depoimento
     };
 
@@ -324,49 +331,39 @@ function carregarDepoimentos() {
 }
 
 function carregarImpactos() {
-    fetch("/respostas/impactos").then(function (res) {
-        if (!res.ok) {
-            throw new Error("HTTP " + res.status);
-        }
-        return res.json();
-    }).then(function (dados) {
-        desenharImpactos(dados || {});
-        finalizarRequisicao(false);
-    }).catch(function (erro) {
-        console.log("Erro ao carregar impactos:", erro);
-        finalizarRequisicao(true);
-    });
+    // endpoint removed; replaced by horas-impacto
 }
 
 function carregarComportamento() {
-    fetch("/respostas/comportamento").then(function (res) {
-        if (!res.ok) {
-            throw new Error("HTTP " + res.status);
-        }
+    // endpoint removed
+}
+
+function carregarAreasImpacto() {
+    // endpoint removed
+}
+
+function carregarHorasImpacto() {
+    fetch("/respostas/horas-impacto").then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
     }).then(function (dados) {
-        var estudo = dados.estudo || { pct_sim: 0, pct_nao: 0 };
-        var conversa = dados.conversa || { pct_sim: 0, pct_nao: 0 };
-        desenharEstudo(estudo);
-        desenharConversa(conversa);
+        desenharHorasImpacto(dados || {});
         finalizarRequisicao(false);
     }).catch(function (erro) {
-        console.log("Erro ao carregar comportamento:", erro);
+        console.log("Erro ao carregar horas x impacto:", erro);
         finalizarRequisicao(true);
     });
 }
 
-function carregarAreasImpacto() {
-    fetch("/respostas/areas-impacto").then(function (res) {
-        if (!res.ok) {
-            throw new Error("HTTP " + res.status);
-        }
+function carregarMinas() {
+    fetch("/respostas/minas").then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
-    }).then(function (areas) {
-        desenharAreasImpacto(areas || []);
+    }).then(function (payload) {
+        atualizarMinas(payload || {});
         finalizarRequisicao(false);
     }).catch(function (erro) {
-        console.log("Erro ao carregar áreas de impacto:", erro);
+        console.log("Erro ao carregar minas:", erro);
         finalizarRequisicao(true);
     });
 }
@@ -480,62 +477,68 @@ function desenharArtistas(artistas) {
 }
 
 function desenharImpactos(dados) {
-    var canvas = q("chart-impactos");
-    if (!canvas) {
+    // removed: replaced by horas x impacto chart
+}
+
+function desenharHorasImpacto(dados) {
+    var canvas = q("chart-horas-impacto");
+    if (!canvas) return;
+
+    var labels = ["1", "2", "3", "4", "5"];
+    var medias = [];
+    for (var i = 1; i <= 5; i++) {
+        var linha = dados[i] || { quantidade: 0, horas_media: 0 };
+        medias.push(Number(linha.horas_media) || 0);
+    }
+
+    if (horasImpactoChart) {
+        horasImpactoChart.data.labels = labels;
+        horasImpactoChart.data.datasets[0].data = medias;
+        horasImpactoChart.update();
         return;
     }
 
-    var emocional = Number(dados.media_emocional) || 0;
-    var pratico = Number(dados.media_pratico) || 0;
-
-    if (impactosChart) {
-        impactosChart.data.datasets[0].data = [emocional];
-        impactosChart.data.datasets[1].data = [pratico];
-        impactosChart.update();
-        return;
-    }
-
-    impactosChart = new Chart(canvas.getContext("2d"), {
+    horasImpactoChart = new Chart(canvas.getContext("2d"), {
         type: "bar",
         data: {
-            labels: ["Média geral"],
-            datasets: [
-                {
-                    label: "Emocional",
-                    data: [emocional],
-                    backgroundColor: COR_VERMELHO,
-                    borderColor: COR_PAPEL,
-                    borderWidth: 2
-                },
-                {
-                    label: "Prático",
-                    data: [pratico],
-                    backgroundColor: COR_PAPEL,
-                    borderColor: COR_VERMELHO,
-                    borderWidth: 2
-                }
-            ]
+            labels: labels,
+            datasets: [{
+                label: "Média de horas por semana",
+                data: medias,
+                backgroundColor: COR_VERMELHO,
+                borderColor: COR_PAPEL,
+                borderWidth: 2
+            }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: {
-                legend: { labels: { color: COR_TEXTO } }
-            },
+            plugins: { legend: { display: false } },
             scales: {
-                x: {
-                    ticks: { color: COR_TEXTO },
-                    grid: { color: COR_LINHA }
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 5,
-                    ticks: { color: COR_TEXTO },
-                    grid: { color: COR_LINHA }
-                }
+                x: { ticks: { color: COR_TEXTO }, grid: { color: COR_LINHA } },
+                y: { beginAtZero: true, ticks: { color: COR_TEXTO }, grid: { color: COR_LINHA } }
             }
         }
     });
+}
+
+function atualizarMinas(payload) {
+    var contagem = payload.minas || {};
+    var trilho = document.getElementById("minas-trilho");
+    if (!trilho) return;
+    var cards = trilho.querySelectorAll('.mina');
+    for (var i = 0; i < cards.length; i++) {
+        var nomeEl = cards[i].querySelector('.mina-nome');
+        if (!nomeEl) continue;
+        var nome = nomeEl.textContent.trim();
+        var valor = contagem[nome] || 0;
+        var antigo = cards[i].querySelector('.mina-selo');
+        if (antigo) antigo.remove();
+        var selo = document.createElement('div');
+        selo.className = 'mina-selo';
+        selo.textContent = valor > 0 ? 'Citada ' + valor + ' vezes' : 'Ainda não citada';
+        nomeEl.parentNode.appendChild(selo);
+    }
 }
 
 function desenharEstudo(dados) {
@@ -702,7 +705,6 @@ function montarRanking(linhas) {
         var linha = document.createElement("tr");
         adicionarCelula(linha, linhas[i].artista);
         adicionarCelula(linha, String(Number(linhas[i].mencoes) || 0));
-        adicionarCelula(linha, formatarNumero(linhas[i].horas_totais, 1) + "h");
         adicionarCelula(linha, formatarNumero(linhas[i].horas_medias, 1) + "h");
         adicionarCelula(linha, formatarNumero(linhas[i].impacto_medio, 1) + " / 100");
         corpo.appendChild(linha);
